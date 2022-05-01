@@ -14,24 +14,23 @@ process.argv.forEach((arg, index) => {
 });
 
 let SERVER_INSTANCE: http.Server;
-let SERVER_SSL: Object;
+let SERVER_SSL: Object = {};
 if (fs.existsSync('/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem')) {
   try {
     SERVER_SSL = {
-      cert:
-        fs.readFileSync(
-          '/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem'
-        ) ?? '',
-      key:
-        fs.readFileSync(
-          '/etc/letsencrypt/live/www.absoluterpg.com/privkey.pem'
-        ) ?? '',
+      cert: fs.readFileSync(
+        '/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem'
+      ),
+      key: fs.readFileSync(
+        '/etc/letsencrypt/live/www.absoluterpg.com/privkey.pem'
+      ),
     };
   } catch (error) {
     console.log(
       '[Absolute Chat | Init] Production SSL certs not found.',
       error
     );
+
     process.exit();
   }
 
