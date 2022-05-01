@@ -4,6 +4,7 @@
   "description": "Real-time socket-based chat system for Pokemon Absolute",
   "main": "./src/server/index.js",
   "scripts": {
+    "build": "tsc",
     "dev_test": "nodemon ./src/server/index.ts",
     "dev": "tsc && nodemon ./build/server/index.js",
     "start": "node ./build/server/index.js"
