@@ -22,22 +22,17 @@ export default class Absol {
      * Handle connections to the server.
      */
     this.server.on('connection', (socket: Socket): void => {
-      let client: User | [];
+      let client: User;
 
       /**
        * Handle the initial authentication of the client.
        */
       socket.on('auth', async (authObject) => {
-        console.log('[Server] Client Auth', authObject);
-
         client = new User(authObject.user, authObject.postcode);
         if (!(await client.init())) {
-          console.log('[Server] Client failed auth check.', authObject);
-
           return;
         }
 
-        console.log('[Server] Client passed auth check.', client);
         this.clients?.push(client);
       });
 
@@ -45,7 +40,11 @@ export default class Absol {
        * Handle the disconnection of a client.
        */
       socket.on('disconnect', (): void => {
-        console.log('[Server] Client Disconnected.', client);
+        if (typeof client !== 'undefined') {
+          this.clients = this.clients.filter(
+            (tClient) => tClient.userData?.ID !== client.userData?.ID
+          );
+        }
       });
 
       /**
