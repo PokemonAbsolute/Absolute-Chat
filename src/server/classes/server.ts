@@ -3,6 +3,8 @@ import { Server, Socket } from 'socket.io';
 
 import User from './user';
 
+import { InputMessageInterface } from '../types/message';
+
 export default class Absol {
   server: Server | undefined;
   clients: User[] = [];
@@ -33,7 +35,7 @@ export default class Absol {
           return;
         }
 
-        this.clients?.push(client);
+        this.clients.push(client);
       });
 
       /**
@@ -50,9 +52,12 @@ export default class Absol {
       /**
        * Handle the emitted chat-message.
        */
-      socket.on('chat-message', async (chatData: any): Promise<void> => {
-        console.log('[Server] Client Chat Message', chatData);
-      });
+      socket.on(
+        'chat-message',
+        async (chatData: InputMessageInterface): Promise<void> => {
+          console.log('[Server] Client Chat Message', chatData);
+        }
+      );
     });
 
     switch (initType) {
