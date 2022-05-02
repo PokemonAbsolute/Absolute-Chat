@@ -4,6 +4,8 @@ import { Server, Socket } from 'socket.io';
 import User from './user';
 import MessageHandler from './message-handler';
 
+import { INIT_COMMANDS } from '../util/get-commands';
+
 import MessageInterface, { InputMessageInterface } from '../types/message';
 
 export default class Absol {
@@ -13,8 +15,11 @@ export default class Absol {
   private clientPool: User[] = [];
   private messagePool: MessageInterface[] = [];
 
+  private commandList: Map<any, any> | undefined = undefined;
+
   constructor() {
     this.messageHandler = new MessageHandler();
+    this.commandList = INIT_COMMANDS();
   }
 
   start(server: http.Server, initType: string): void {
@@ -50,6 +55,8 @@ export default class Absol {
         }
 
         this.clientPool.push(client);
+
+        console.log('[Server] Available Commands:', this.commandList);
       });
 
       /**
@@ -70,6 +77,8 @@ export default class Absol {
         'chat-message',
         async (chatData: InputMessageInterface): Promise<void> => {
           console.log('[Server] Client Chat Message', chatData);
+
+          const MESSAGE_DATA = this.messageHandler.sendMessage;
         }
       );
     });
