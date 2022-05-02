@@ -1,4 +1,4 @@
-export const lastSeenOn = (startTime: number) => {
+export const lastSeenOn = (startTime: number): string => {
   const diffTimestamp: number = Math.floor((Date.now() - startTime) / 1000);
 
   if (diffTimestamp < 60) {
