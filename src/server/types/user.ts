@@ -3,4 +3,5 @@ export default interface UserInterface {
   Username: string;
   Rank: string;
   Auth_Code: string;
+  Avatar: string;
 }

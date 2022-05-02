@@ -24,7 +24,7 @@ export default class User {
 
   public async init(): Promise<boolean> {
     const USER_DATA: any[] | undefined = await MySQL.doQuery(
-      'SELECT `ID`, `Username`, `Rank`, `Auth_Code` FROM `users` WHERE `ID` = ? LIMIT 1',
+      'SELECT `ID`, `Username`, `Rank`, `Auth_Code`, `Avatar` FROM `users` WHERE `ID` = ? LIMIT 1',
       [this.userID]
     );
 
