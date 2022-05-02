@@ -8,7 +8,7 @@ import Absol from './classes/server';
 
 let AbsolServer: Absol;
 
-let initType: string = '';
+let initType: string;
 process.argv.forEach((arg, index) => {
   index === 2 ? (initType = arg) : '';
 });
