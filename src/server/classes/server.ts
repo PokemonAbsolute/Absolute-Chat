@@ -2,20 +2,34 @@ import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 
 import User from './user';
+import MessageHandler from './message-handler';
 
-import { InputMessageInterface } from '../types/message';
+import MessageInterface, { InputMessageInterface } from '../types/message';
 
 export default class Absol {
-  server: Server | undefined;
-  clients: User[] = [];
-  messages: [] = [];
+  private server: Server | undefined;
+  private messageHandler: MessageHandler;
+
+  private clientPool: User[] = [];
+  private messagePool: MessageInterface[] = [];
+
+  constructor() {
+    this.messageHandler = new MessageHandler();
+  }
 
   start(server: http.Server, initType: string): void {
+    /**
+     * Create a new server instance.
+     */
     this.server = new Server(server, {
       allowEIO3: true,
       connectTimeout: 30000,
       cors: {
-        origin: 'http://localhost',
+        origin: [
+          'http://localhost',
+          'https://absoluterpg.com',
+          'https://www.absoluterpg.com',
+        ],
         credentials: true,
       },
     });
@@ -35,7 +49,7 @@ export default class Absol {
           return;
         }
 
-        this.clients.push(client);
+        this.clientPool.push(client);
       });
 
       /**
@@ -43,7 +57,7 @@ export default class Absol {
        */
       socket.on('disconnect', (): void => {
         if (typeof client !== 'undefined') {
-          this.clients = this.clients.filter(
+          this.clientPool = this.clientPool.filter(
             (tClient) => tClient.userData?.ID !== client.userData?.ID
           );
         }
@@ -60,6 +74,9 @@ export default class Absol {
       );
     });
 
+    /**
+     * Emit a welcoming message when the server initially boots.
+     */
     switch (initType) {
       case 'debug':
         console.log('[Server] Debug mode. Emit message.');
