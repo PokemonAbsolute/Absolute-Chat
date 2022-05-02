@@ -14,6 +14,7 @@ export interface InputMessageInterface {
 
 interface MessageUserProps {
   userID: number;
-  postCode: string;
+  postcode: string;
   connected: boolean;
+  startsWith: Function;
 }

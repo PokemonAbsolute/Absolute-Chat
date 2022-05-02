@@ -5,16 +5,16 @@ import BanInterface from '../types/ban';
 
 export default class User {
   private userID: number;
-  private sentAuthCode: number;
+  private sentAuthCode: string;
   public userData: UserInterface | undefined;
   public banData: BanInterface | undefined;
 
-  constructor(userID: number, authCode: number) {
+  constructor(userID: number, authCode: string) {
     this.userID = userID;
     this.sentAuthCode = authCode;
   }
 
-  public async auth(authCode: number): Promise<boolean> {
+  public async auth(authCode: string): Promise<boolean> {
     if (this.sentAuthCode == authCode) {
       return true;
     }
