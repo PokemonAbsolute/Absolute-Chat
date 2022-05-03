@@ -100,4 +100,32 @@ export default class Absol {
         break;
     }
   }
+
+  /**
+   * Get the message history.
+   */
+  private getMessageHistory(client: User, messageCount: number): void {
+    if (typeof this.server === 'undefined') {
+      return;
+    }
+
+    messageCount = messageCount > 100 ? 100 : messageCount;
+
+    let messagesToUse: MessageInterface[] = [];
+    if (this.messagePool.length > messageCount) {
+      messagesToUse = this.messagePool.slice(-messageCount);
+    } else {
+      messagesToUse = this.messagePool;
+    }
+
+    for (const message of messagesToUse) {
+      /**
+       * if ( !message.isPrivate || message.isPrivate && message.isPrivateTo === client.user.id ) {
+       *    this.server.emit('chat-message', message);
+       * }
+       */
+
+      this.server.emit('chat-message', message);
+    }
+  }
 }
