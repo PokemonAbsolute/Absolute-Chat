@@ -5,6 +5,7 @@ export default interface MessageInterface {
   userAvatar: string | undefined;
   messageText: string;
   isPrivate: boolean;
+  isPrivateTo: number;
   sentOn: number;
 }
 

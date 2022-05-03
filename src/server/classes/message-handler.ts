@@ -7,15 +7,17 @@ export default class MessageHandler {
   public sendMessage(
     message: string,
     sentBy: User,
-    isPrivate?: boolean
+    isPrivate?: boolean,
+    isPrivateTo?: number
   ): MessageInterface {
-    return new Message(message, isPrivate).fromUser(sentBy);
+    return new Message(message, isPrivate, isPrivateTo).fromUser(sentBy);
   }
 
   public sendBotMessage(
     message: string,
-    isPrivate?: boolean
+    isPrivate?: boolean,
+    isPrivateTo?: number
   ): MessageInterface {
-    return new Message(message, isPrivate).fromBot();
+    return new Message(message, isPrivate, isPrivateTo).fromBot();
   }
 }

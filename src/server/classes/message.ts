@@ -4,13 +4,15 @@ import MessageInterface from '../types/message';
 
 export default class Message {
   private message: string;
-  private isPrivate: boolean = false;
   private sentOn: number;
+  private isPrivate: boolean = false;
+  private isPrivateTo: number;
 
-  constructor(message: string, isPrivate?: boolean) {
+  constructor(message: string, isPrivate?: boolean, isPrivateTo?: number) {
     this.message = message;
-    this.isPrivate = isPrivate ?? false;
     this.sentOn = Math.floor(Date.now() / 1000);
+    this.isPrivate = isPrivate ?? false;
+    this.isPrivateTo = isPrivateTo ?? -1;
   }
 
   public fromUser(sentBy: User): MessageInterface {
@@ -21,6 +23,7 @@ export default class Message {
       userAvatar: sentBy.userData?.Avatar,
       messageText: this.message,
       isPrivate: this.isPrivate,
+      isPrivateTo: this.isPrivateTo,
       sentOn: this.sentOn,
     };
   }
@@ -33,6 +36,7 @@ export default class Message {
       userAvatar: '/Avatars/Custom/3.png',
       messageText: this.message,
       isPrivate: this.isPrivate,
+      isPrivateTo: this.isPrivateTo,
       sentOn: this.sentOn,
     };
   }

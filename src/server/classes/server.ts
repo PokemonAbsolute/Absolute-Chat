@@ -150,13 +150,8 @@ export default class Absol {
     }
 
     for (const message of messagesToUse) {
-      /**
-       * if ( !message.isPrivate || message.isPrivate && message.isPrivateTo === client.user.id ) {
-       *    this.server.emit('chat-message', message);
-       * }
-       */
-
-      this.server.emit('chat-message', message);
+      if (!message.isPrivate || message.isPrivateTo === client.userData?.ID)
+        this.server.emit('chat-message', message);
     }
   }
 }
