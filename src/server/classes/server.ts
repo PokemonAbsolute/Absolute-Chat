@@ -8,6 +8,8 @@ import { INIT_COMMANDS } from '../util/get-commands';
 
 import MessageInterface, { InputMessageInterface } from '../types/message';
 
+import { COMMAND_PREFIX } from '../config/server';
+
 export default class Absol {
   private server: Server | undefined;
   private messageHandler: MessageHandler;
@@ -15,14 +17,17 @@ export default class Absol {
   private clientPool: User[] = [];
   private messagePool: MessageInterface[] = [];
 
-  private commandList: Map<any, any> | undefined = undefined;
+  private commandList: Map<any, any> | undefined;
 
   constructor() {
     this.messageHandler = new MessageHandler();
     this.commandList = INIT_COMMANDS();
   }
 
-  start(server: http.Server, initType: string): void {
+  /**
+   * Starts the server and preps the socket and events.
+   */
+  public start(server: http.Server, initType: string): void {
     /**
      * Create a new server instance.
      */
@@ -55,8 +60,7 @@ export default class Absol {
         }
 
         this.clientPool.push(client);
-
-        console.log('[Server] Available Commands:', this.commandList);
+        this.getMessageHistory(client, 30);
       });
 
       /**
@@ -76,9 +80,26 @@ export default class Absol {
       socket.on(
         'chat-message',
         async (chatData: InputMessageInterface): Promise<void> => {
-          console.log('[Server] Client Chat Message', chatData);
+          let Message_Data: MessageInterface;
 
-          const MESSAGE_DATA = this.messageHandler.sendMessage;
+          if (!(await client.auth(chatData?.user?.postcode))) {
+            return;
+          }
+
+          if (chatData.text.startsWith(COMMAND_PREFIX)) {
+            // add and then emit client message
+            // this.messageHandler.sendMessage(chatData.text, client, true);
+            // process, add, and then emit command
+            // command can fail if not valid
+          } else {
+            Message_Data = this.messageHandler.sendMessage(
+              chatData.text,
+              client
+            );
+
+            socket.emit('chat-message', Message_Data);
+            this.messagePool.push(Message_Data);
+          }
         }
       );
     });
