@@ -113,26 +113,23 @@ export default class Absol {
         initMessage = this.messageHandler.sendBotMessage(
           'Absolute Chat has started in debug mode.'
         );
-        this.server.emit('chat-message', initMessage);
-        this.messagePool.push(initMessage);
         break;
 
       case 'update':
         initMessage = this.messageHandler.sendBotMessage(
           'Absolute has been updated!'
         );
-        this.server.emit('chat-message', initMessage);
-        this.messagePool.push(initMessage);
         break;
 
       default:
         initMessage = this.messageHandler.sendBotMessage(
           'Absolute Chat is online.'
         );
-        this.server.emit('chat-message', initMessage);
-        this.messagePool.push(initMessage);
         break;
     }
+
+    this.server.emit('chat-message', initMessage);
+    this.messagePool.push(initMessage);
   }
 
   /**
