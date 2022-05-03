@@ -9,7 +9,8 @@ export default interface MessageInterface {
 }
 
 export interface InputMessageInterface {
-  [messageSender: string]: MessageUserProps;
+  user: MessageUserProps;
+  text: string;
 }
 
 interface MessageUserProps {
