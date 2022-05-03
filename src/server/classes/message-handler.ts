@@ -12,7 +12,10 @@ export default class MessageHandler {
     return new Message(message, sentBy, isPrivate).fromUser();
   }
 
-  public sendBotMessage(message: string): MessageInterface {
-    return new Message(message, undefined, true).fromBot();
+  public sendBotMessage(
+    message: string,
+    isPrivate?: boolean
+  ): MessageInterface {
+    return new Message(message, undefined, isPrivate).fromBot();
   }
 }

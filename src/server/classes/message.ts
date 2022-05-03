@@ -32,7 +32,7 @@ export default class Message {
       userID: -1,
       userName: 'Absol',
       userRank: 'Bot',
-      userAvatar: 'images/Avatars/Custom/3.png',
+      userAvatar: '/Avatars/Custom/3.png',
       messageText: this.message,
       isPrivate: this.isPrivate,
       sentOn: this.sentOn,

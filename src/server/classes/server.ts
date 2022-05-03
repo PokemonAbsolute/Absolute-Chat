@@ -107,17 +107,30 @@ export default class Absol {
     /**
      * Emit a welcoming message when the server initially boots.
      */
+    let initMessage: MessageInterface;
     switch (initType) {
       case 'debug':
-        console.log('[Server] Debug mode. Emit message.');
+        initMessage = this.messageHandler.sendBotMessage(
+          'Absolute Chat has started in debug mode.'
+        );
+        this.server.emit('chat-message', initMessage);
+        this.messagePool.push(initMessage);
         break;
 
       case 'update':
-        console.log('[Server] Updated! Emit message.');
+        initMessage = this.messageHandler.sendBotMessage(
+          'Absolute has been updated!'
+        );
+        this.server.emit('chat-message', initMessage);
+        this.messagePool.push(initMessage);
         break;
 
       default:
-        console.log('[Server] Absolute Chat is online. Emit message.');
+        initMessage = this.messageHandler.sendBotMessage(
+          'Absolute Chat is online.'
+        );
+        this.server.emit('chat-message', initMessage);
+        this.messagePool.push(initMessage);
         break;
     }
   }
