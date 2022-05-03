@@ -6,21 +6,19 @@ export default class Message {
   private message: string;
   private isPrivate: boolean = false;
   private sentOn: number;
-  private sentBy?: User | undefined;
 
-  constructor(message: string, sentBy?: User, isPrivate?: boolean) {
+  constructor(message: string, isPrivate?: boolean) {
     this.message = message;
     this.isPrivate = isPrivate ?? false;
-    this.sentBy = sentBy;
     this.sentOn = Math.floor(Date.now() / 1000);
   }
 
-  public fromUser(): MessageInterface {
+  public fromUser(sentBy: User): MessageInterface {
     return {
-      userID: this.sentBy?.userData?.ID,
-      userName: this.sentBy?.userData?.Username,
-      userRank: this.sentBy?.userData?.Rank,
-      userAvatar: this.sentBy?.userData?.Avatar,
+      userID: sentBy.userData?.ID,
+      userName: sentBy.userData?.Username,
+      userRank: sentBy.userData?.Rank,
+      userAvatar: sentBy.userData?.Avatar,
       messageText: this.message,
       isPrivate: this.isPrivate,
       sentOn: this.sentOn,

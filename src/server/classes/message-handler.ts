@@ -9,13 +9,13 @@ export default class MessageHandler {
     sentBy: User,
     isPrivate?: boolean
   ): MessageInterface {
-    return new Message(message, sentBy, isPrivate).fromUser();
+    return new Message(message, isPrivate).fromUser(sentBy);
   }
 
   public sendBotMessage(
     message: string,
     isPrivate?: boolean
   ): MessageInterface {
-    return new Message(message, undefined, isPrivate).fromBot();
+    return new Message(message, isPrivate).fromBot();
   }
 }
