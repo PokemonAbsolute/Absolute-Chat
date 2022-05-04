@@ -6,9 +6,11 @@ import MessageHandler from './message-handler';
 
 import { INIT_COMMANDS } from '../util/get-commands';
 
+import { CommandResponse } from '../types/command';
 import MessageInterface, { InputMessageInterface } from '../types/message';
 
 import { COMMAND_PREFIX } from '../config/server';
+import { CONNREFUSED } from 'dns';
 
 export default class Absol {
   private server: Server | undefined;
@@ -80,25 +82,42 @@ export default class Absol {
       socket.on(
         'chat-message',
         async (chatData: InputMessageInterface): Promise<void> => {
-          let Message_Data: MessageInterface;
-
           if (!(await client.auth(chatData?.user?.postcode))) {
             return;
           }
 
-          if (chatData.text.startsWith(COMMAND_PREFIX)) {
-            // add and then emit client message
-            // this.messageHandler.sendMessage(chatData.text, client, true);
-            // process, add, and then emit command
-            // command can fail if not valid
-          } else {
-            Message_Data = this.messageHandler.sendMessage(
-              chatData.text,
-              client
-            );
+          let Message_Buffer: MessageInterface[] = [];
 
-            socket.emit('chat-message', Message_Data);
-            this.messagePool.push(Message_Data);
+          Message_Buffer.push(
+            this.messageHandler.sendMessage(chatData.text, client)
+          );
+
+          if (chatData.text.startsWith(COMMAND_PREFIX)) {
+            const COMMAND_ARGS: string[] = chatData.text
+              .slice(COMMAND_PREFIX.length)
+              .split(' ');
+
+            const COMMAND_NAME: string | undefined =
+              COMMAND_ARGS.shift()?.toLowerCase();
+
+            const COMMAND_DATA: any = this.commandList?.get(COMMAND_NAME);
+
+            if (typeof COMMAND_DATA !== 'undefined') {
+              const COMMAND_RESPONSE: CommandResponse = COMMAND_DATA.execute();
+
+              Message_Buffer.push(
+                this.messageHandler.sendBotMessage(
+                  COMMAND_RESPONSE.message,
+                  true,
+                  client.userData?.ID
+                )
+              );
+            }
+          }
+
+          for (const Message of Message_Buffer) {
+            socket.emit('chat-message', Message);
+            this.messagePool.push(Message);
           }
         }
       );

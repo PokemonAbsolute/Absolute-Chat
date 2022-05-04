@@ -10,7 +10,7 @@ export const INIT_COMMANDS = () => {
 
   for (const FILE of COMMANDS) {
     const COMMAND = require(path.resolve(`./src/server/commands/${FILE}`));
-    COMMAND_LIST.set(COMMAND.name + '.js', COMMAND);
+    COMMAND_LIST.set(COMMAND.name, COMMAND);
   }
 
   return COMMAND_LIST;

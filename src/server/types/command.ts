@@ -4,3 +4,7 @@ export interface CommandInterface {
   args?: any;
   execute: Function;
 }
+
+export interface CommandResponse {
+  message: string;
+}
