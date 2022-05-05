@@ -10,7 +10,6 @@ import { CommandResponse } from '../types/command';
 import MessageInterface, { InputMessageInterface } from '../types/message';
 
 import { COMMAND_PREFIX } from '../config/server';
-import { CONNREFUSED } from 'dns';
 
 export default class Absol {
   private server: Server | undefined;
@@ -169,8 +168,9 @@ export default class Absol {
     }
 
     for (const message of messagesToUse) {
-      if (!message.isPrivate || message.isPrivateTo === client.userData?.ID)
+      if (!message.isPrivate || message.isPrivateTo === client.userData?.ID) {
         this.server.emit('chat-message', message);
+      }
     }
   }
 }
