@@ -70,11 +70,11 @@ export default class User {
     }
 
     const BAN_DATA: any[] | undefined = await MySQL.doQuery(
-      'SELECT `Banned_By`, `Banned_On`, `Chat_Ban`, `Chat_Ban_Until`, `Chat_Ban_Reason` FROM `user_bans` WHERE `User_ID` = ? LIMIT 1',
+      'SELECT * FROM `user_bans` WHERE `User_ID` = ? AND (`RPG_Ban` = 1 OR `Chat_Ban` = 1) LIMIT 1',
       [this.userData.ID]
     );
 
-    if (typeof BAN_DATA === 'undefined') {
+    if (typeof BAN_DATA === 'undefined' || BAN_DATA?.length === 0) {
       return false;
     }
 
