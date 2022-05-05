@@ -85,36 +85,47 @@ export default class Absol {
             return;
           }
 
-          let Message_Buffer: MessageInterface[] = [];
+          let messageBuffer: MessageInterface[] = [];
 
-          Message_Buffer.push(
-            this.messageHandler.sendMessage(chatData.text, client)
-          );
+          if (await client.getBan()) {
+            messageBuffer.push(
+              this.messageHandler.sendBotMessage(
+                `You are banned, ${client.userData?.Username}.`,
+                true,
+                client.userData?.ID
+              )
+            );
+          } else {
+            messageBuffer.push(
+              this.messageHandler.sendMessage(chatData.text, client)
+            );
 
-          if (chatData.text.startsWith(COMMAND_PREFIX)) {
-            const COMMAND_ARGS: string[] = chatData.text
-              .slice(COMMAND_PREFIX.length)
-              .split(' ');
+            if (chatData.text.startsWith(COMMAND_PREFIX)) {
+              const COMMAND_ARGS: string[] = chatData.text
+                .slice(COMMAND_PREFIX.length)
+                .split(' ');
 
-            const COMMAND_NAME: string | undefined =
-              COMMAND_ARGS.shift()?.toLowerCase();
+              const COMMAND_NAME: string | undefined =
+                COMMAND_ARGS.shift()?.toLowerCase();
 
-            const COMMAND_DATA: any = this.commandList?.get(COMMAND_NAME);
+              const COMMAND_DATA: any = this.commandList?.get(COMMAND_NAME);
 
-            if (typeof COMMAND_DATA !== 'undefined') {
-              const COMMAND_RESPONSE: CommandResponse = COMMAND_DATA.execute();
+              if (typeof COMMAND_DATA !== 'undefined') {
+                const COMMAND_RESPONSE: CommandResponse =
+                  COMMAND_DATA.execute();
 
-              Message_Buffer.push(
-                this.messageHandler.sendBotMessage(
-                  COMMAND_RESPONSE.message,
-                  true,
-                  client.userData?.ID
-                )
-              );
+                messageBuffer.push(
+                  this.messageHandler.sendBotMessage(
+                    COMMAND_RESPONSE.message,
+                    true,
+                    client.userData?.ID
+                  )
+                );
+              }
             }
           }
 
-          for (const Message of Message_Buffer) {
+          for (const Message of messageBuffer) {
             socket.emit('chat-message', Message);
             this.messagePool.push(Message);
           }
