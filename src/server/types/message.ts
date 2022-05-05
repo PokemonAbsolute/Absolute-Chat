@@ -10,13 +10,11 @@ export default interface MessageInterface {
 }
 
 export interface InputMessageInterface {
-  user: MessageUserProps;
+  user: {
+    userID: number;
+    postcode: string;
+    connected: boolean;
+    startsWith: Function;
+  };
   text: string;
-}
-
-interface MessageUserProps {
-  userID: number;
-  postcode: string;
-  connected: boolean;
-  startsWith: Function;
 }

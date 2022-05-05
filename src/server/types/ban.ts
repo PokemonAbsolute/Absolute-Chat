@@ -1,7 +1,7 @@
 export default interface BanInterface {
-  User_ID?: number;
-  Banned_By?: number;
-  Banned_On?: number;
+  User_ID: number;
+  Banned_By: number;
+  Banned_On: number;
 
   RPG_Ban?: boolean;
   RPG_Ban_Reason?: string;
