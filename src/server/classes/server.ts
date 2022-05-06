@@ -216,7 +216,6 @@ export default class Absol {
       (message) =>
         message.sentOn >= TIME_LIMIT && message.userID === client.userData?.ID
     ).length;
-    console.log('[Server | Is Spamming]', RECENT_MESSAGE_COUNT);
 
     return RECENT_MESSAGE_COUNT >= this.spamCheckMessageCount;
   }
