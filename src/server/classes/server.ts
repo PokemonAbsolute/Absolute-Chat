@@ -85,45 +85,46 @@ export default class Absol {
             return;
           }
 
-          let messageBuffer: MessageInterface[] = [];
-
           if (await client.getBan()) {
-            messageBuffer.push(
+            socket.emit(
+              'chat-message',
               this.messageHandler.sendBotMessage(
                 `You are banned, ${client.userData?.Username}.`,
                 true,
                 client.userData?.ID
               )
             );
-          } else {
-            messageBuffer.push(
-              this.messageHandler.sendMessage(chatData.text, client)
-            );
 
-            if (chatData.text.startsWith(COMMAND_PREFIX)) {
-              const COMMAND_ARGS: string[] = chatData.text
-                .slice(COMMAND_PREFIX.length)
-                .split(' ');
+            return;
+          }
 
-              const COMMAND_NAME: string | undefined =
-                COMMAND_ARGS.shift()?.toLowerCase();
+          let messageBuffer: MessageInterface[] = [];
 
-              const COMMAND_DATA: any = this.commandList?.get(COMMAND_NAME);
+          messageBuffer.push(
+            this.messageHandler.sendMessage(chatData.text, client)
+          );
 
-              if (typeof COMMAND_DATA !== 'undefined') {
-                const COMMAND_RESPONSE: CommandResponse =
-                  await COMMAND_DATA.execute(COMMAND_ARGS);
+          if (chatData.text.startsWith(COMMAND_PREFIX)) {
+            const COMMAND_ARGS: string[] = chatData.text
+              .slice(COMMAND_PREFIX.length)
+              .split(' ');
 
-                console.log('[COMMAND] Response:', COMMAND_RESPONSE);
+            const COMMAND_NAME: string | undefined =
+              COMMAND_ARGS.shift()?.toLowerCase();
 
-                messageBuffer.push(
-                  this.messageHandler.sendBotMessage(
-                    COMMAND_RESPONSE.message,
-                    true,
-                    client.userData?.ID
-                  )
-                );
-              }
+            const COMMAND_DATA: any = this.commandList?.get(COMMAND_NAME);
+
+            if (typeof COMMAND_DATA !== 'undefined') {
+              const COMMAND_RESPONSE: CommandResponse =
+                await COMMAND_DATA.execute(COMMAND_ARGS);
+
+              messageBuffer.push(
+                this.messageHandler.sendBotMessage(
+                  COMMAND_RESPONSE.message,
+                  true,
+                  client.userData?.ID
+                )
+              );
             }
           }
 
