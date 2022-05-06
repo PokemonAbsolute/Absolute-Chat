@@ -20,6 +20,9 @@ export default class Absol {
 
   private commandList: Map<any, any> | undefined;
 
+  private spamCheckMessageCount: number = 5;
+  private spamCheckIntervalSec: number = 5;
+
   constructor() {
     this.messageHandler = new MessageHandler();
     this.commandList = INIT_COMMANDS();
@@ -54,7 +57,7 @@ export default class Absol {
       /**
        * Handle the initial authentication of the client.
        */
-      socket.on('auth', async (authObject) => {
+      socket.on('auth', async (authObject): Promise<void> => {
         client = new User(authObject.user, authObject.postcode);
         if (!(await client.init())) {
           return;
@@ -96,6 +99,18 @@ export default class Absol {
             );
 
             socket.disconnect();
+            return;
+          }
+
+          if (this.isSpamming(client)) {
+            socket.emit(
+              'chat-message',
+              this.messageHandler.sendBotMessage(
+                `Please send fewer messages, ${client.userData?.Username}.`,
+                true,
+                client.userData?.ID
+              )
+            );
 
             return;
           }
@@ -188,5 +203,21 @@ export default class Absol {
         this.server.emit('chat-message', message);
       }
     }
+  }
+
+  /**
+   * Check if the client is spamming.
+   */
+  private isSpamming(client: User): boolean {
+    const TIME_LIMIT =
+      Math.round(Date.now()) - this.spamCheckIntervalSec * 1000;
+
+    const RECENT_MESSAGE_COUNT = this.messagePool.filter(
+      (message) =>
+        message.sentOn >= TIME_LIMIT && message.userID === client.userData?.ID
+    ).length;
+    console.log('[Server | Is Spamming]', RECENT_MESSAGE_COUNT);
+
+    return RECENT_MESSAGE_COUNT >= this.spamCheckMessageCount;
   }
 }
