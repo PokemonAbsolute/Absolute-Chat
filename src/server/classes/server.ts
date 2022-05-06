@@ -95,6 +95,8 @@ export default class Absol {
               )
             );
 
+            socket.disconnect();
+
             return;
           }
 
