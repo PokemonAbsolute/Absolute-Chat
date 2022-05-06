@@ -10,7 +10,7 @@ export default class Message {
 
   constructor(message: string, isPrivate?: boolean, isPrivateTo?: number) {
     this.message = message;
-    this.sentOn = Math.floor(Date.now() / 1000);
+    this.sentOn = Date.now();
     this.isPrivate = isPrivate ?? false;
     this.isPrivateTo = isPrivateTo ?? -1;
   }
