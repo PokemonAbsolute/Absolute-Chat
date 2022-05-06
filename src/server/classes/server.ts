@@ -112,7 +112,9 @@ export default class Absol {
 
               if (typeof COMMAND_DATA !== 'undefined') {
                 const COMMAND_RESPONSE: CommandResponse =
-                  COMMAND_DATA.execute();
+                  await COMMAND_DATA.execute(COMMAND_ARGS);
+
+                console.log('[COMMAND] Response:', COMMAND_RESPONSE);
 
                 messageBuffer.push(
                   this.messageHandler.sendBotMessage(
