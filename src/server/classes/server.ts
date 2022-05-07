@@ -20,6 +20,7 @@ export default class Absol {
 
   private commandList: Map<any, any> | undefined;
 
+  private messageCharLimit: number = 200;
   private spamCheckMessageCount: number = 5;
   private spamCheckIntervalSec: number = 5;
 
@@ -115,11 +116,11 @@ export default class Absol {
             return;
           }
 
-          if (chatData.text.length > 200) {
+          if (chatData.text.length > this.messageCharLimit) {
             socket.emit(
               'chat-message',
               this.messageHandler.sendBotMessage(
-                `Messages must be less than 200 characters, ${client.userData?.Username}.`,
+                `Messages must be 200 characters or less, ${client.userData?.Username}.`,
                 true,
                 client.userData?.ID
               )
