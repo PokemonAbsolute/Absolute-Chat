@@ -5,9 +5,9 @@
   "main": "./src/server/index.js",
   "scripts": {
     "build": "tsc",
-    "dev_test": "nodemon ./src/server/index.ts",
-    "dev": "tsc && nodemon ./build/server/index.js",
-    "start": "node ./build/server/index.js"
+    "dev": "nodemon ./src/server/index.ts",
+    "start": "node ./build/server/index.js",
+    "build_start": "tsc && node ./build/server/index.js"
   },
   "author": "toxocious",
   "license": "ISC",
