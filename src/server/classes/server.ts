@@ -115,6 +115,19 @@ export default class Absol {
             return;
           }
 
+          if (chatData.text.length > 200) {
+            socket.emit(
+              'chat-message',
+              this.messageHandler.sendBotMessage(
+                `Messages must be less than 200 characters, ${client.userData?.Username}.`,
+                true,
+                client.userData?.ID
+              )
+            );
+
+            return;
+          }
+
           let messageBuffer: MessageInterface[] = [];
 
           messageBuffer.push(
