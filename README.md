@@ -37,6 +37,8 @@ This repository contains the source code for the [Pok&eacute;mon Absolute](https
 ## Features
 - Direct database connection to allow for communication between users
 - User authentication based on unique auth codes set upon account registration
+- Includes numerous custom chat commands for user entertainment and utility
+- Prevents clients from spamming numerous messages over a short period of time
 
 
 
@@ -77,17 +79,15 @@ Ensure that your active directory is the ``./absol`` directory.
 ```bash
 ## Run the dev_test script
 ## Uses nodemon to run the source code
-yarn dev_test
+yarn dev
 ```
 
 **Remote**
 ```bash
-## Run the build script
-yarn build
-
-## Run the start script
-yarn start
+## Run the prod script to compile and run the prod code
+yarn prod
 ```
+
 
 
 ## Contributing

@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "nodemon ./src/server/index.ts",
     "start": "node ./build/server/index.js",
-    "build_start": "tsc && node ./build/server/index.js"
+    "prod": "tsc && node ./build/server/index.js"
   },
   "author": "toxocious",
   "license": "ISC",
