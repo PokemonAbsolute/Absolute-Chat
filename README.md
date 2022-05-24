@@ -1,11 +1,15 @@
 <div align="center">
   <img src="https://absoluterpg.com/images/Assets/banner.png" title="Pokemon Absolute Logo" alt="Pokemon Absolute Logo" />
   <h1 align="center">Pok&eacute;mon Absolute &mdash; Chat</h1>
+
+  **Pok&eacute;mon Absolute** is an online text-based Pok&eacute;mon RPG, comprised of numerous features adapted from the official Pok&eacute;mon games, as well as entirely new features that enhance the playing experience of Pok&eacute;mon.
+
+  This repository contains the source code for the [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute) real-time, socket-based chat system.
+
+  <img src="https://img.shields.io/github/issues/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+  <img src="https://img.shields.io/github/stars/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+  <img src="https://img.shields.io/github/license/Toxocious/  Absolute-Chat?style=for-the-badge&logo=appveyor" />
 </div>
-
-**Pok&eacute;mon Absolute** is an online text-based Pok&eacute;mon RPG, comprised of numerous features adapted from the official Pok&eacute;mon games, as well as entirely new features that enhance the playing experience of Pok&eacute;mon.
-
-This repository contains the source code for the [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute) real-time, socket-based chat system.
 
 
 
