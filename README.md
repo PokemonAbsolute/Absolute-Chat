@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://absoluterpg.com/images/Assets/banner.png" title="Pokemon Absolute Logo" alt="Pokemon Absolute Logo" />
+  <img src="./public/banner.png" title="Pokemon Absolute Logo" alt="Pokemon Absolute Logo" />
   <h1 align="center">Pok&eacute;mon Absolute &mdash; Chat</h1>
 
   **Pok&eacute;mon Absolute** is an online text-based Pok&eacute;mon RPG, comprised of numerous features adapted from the official Pok&eacute;mon games, as well as entirely new features that enhance the playing experience of Pok&eacute;mon.
@@ -10,8 +10,8 @@
   <img src="https://img.shields.io/github/forks/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
   <img src="https://img.shields.io/github/stars/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
   <img src="https://img.shields.io/github/license/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
-  <a href="https://hits.seeyoufarm.com">
-    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat&count_bg=%234A618F&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" />
+  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat">
+    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat&countColor=%232337d6" />
   </a>
 </div>
 
