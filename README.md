@@ -1,20 +1,27 @@
 <div align="center">
-  <img src="./public/banner.png" title="Pokemon Absolute Logo" alt="Pokemon Absolute Logo" />
+  <img src="https://github.com/Toxocious/Absolute/raw/master/app/images/Assets/banner.png" title="Pokemon Absolute Logo" alt="Pokemon Absolute Logo" />
   <h1 align="center">Pok&eacute;mon Absolute &mdash; Chat</h1>
 
   **Pok&eacute;mon Absolute** is an online text-based Pok&eacute;mon RPG, comprised of numerous features adapted from the official Pok&eacute;mon games, as well as entirely new features that enhance the playing experience of Pok&eacute;mon.
 
-  This repository contains the source code for the [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute) real-time, socket-based chat system.
+  This repository contains the source code for the [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute) real time chat system.
 
   <img src="https://img.shields.io/github/issues/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
   <img src="https://img.shields.io/github/forks/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
   <img src="https://img.shields.io/github/stars/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+  <br />
   <img src="https://img.shields.io/github/license/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
-  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat">
-    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat&countColor=%232337d6" />
+  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FToxocious%Absolute-Chat">
+    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FToxocious%Absolute-Chat&countColor=%2337d67a" />
+  </a>
+  <br /><br />
+
+  Check us out on Discord and consider starring the repository if you liked it!
+
+  <a href="https://discord.gg/Km6btPhs" target="_blank">
+    <img src="https://discord.com/api/guilds/1002005327555862620/widget.png?style=banner2" alt="Discord Banner" />
   </a>
 </div>
-
 
 
 ## Table of Contents
@@ -24,11 +31,8 @@
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Run The Script](#run-the-script)
+  - [Development](#development)
 - [Contributing](#contributing)
-  - [General Stance](#general-stance)
-  - [Code Standards](#code-standards)
 - [License](#license)
 
 
@@ -51,69 +55,26 @@
 
 
 ## Getting Started
+It's expected that this chat system is ran through its parent repository [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute) via Docker.
+
+**This chat system will fail to run if it is not able to connect to its designated database.**
+
 ### Prerequisites
 This project is configured and engineered specifically for [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute), and as such, will not work out-of-the-box for anything else.
 
-This project requires that Node.js is installed on your system.
+Do check out [.env.local](.env.local) to see what environment variables you'll need to run this bot.
 
-Yarn is used as the package manager here, so make sure that it's installed.
-```bash
-npm i -g yarn
-```
-
-**NOTE: It will be assumed that you already have the main repository ([Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute)) cloned on your system/server, and will be setting up the chat-system for it.**
-
-### Installation
-Open a terminal into your **Pokemon Absolute** directory, and then clone this repository into ``./absol``.
-
-```bash
-## Change your active directory to your Pokemon Absolute installation
-cd PATH_TO_POKEMON_ABSOLUTE_DIR
-
-## Clone this repository into the ./absol directory
-git clone https://github.com/Toxocious/Absolute.git ./absol
-
-## Change your active directory to ./absol
-cd ./absol
-
-## Install the project's required modules
-yarn install
-```
-
-### Run The Script
-Ensure that your active directory is the ``./absol`` directory.
-
-**Local**
-```bash
-## Run the dev_test script
-## Uses nodemon to run the source code
-yarn dev
-```
-
-**Remote**
-```bash
-## Run the prod script to compile and run the prod code
-yarn prod
-```
+### Development
+If you do choose to add a feature or fix a bug, do note that your pull request will not be accepted if your code does not satisfy our eslint configuration.
 
 
 
 ## Contributing
-### General Stance
-Any contributions you make are greatly appreciated.
-
-1. Fork the Project
-2. Create your Feature Branch (``git checkout -b feature/AmazingFeature``)
-3. Commit your Changes (``git commit -m 'Add some AmazingFeature'``)
-4. Push to the Branch (``git push origin feature/AmazingFeature``)
-5. Open a Pull Request
-
-### Code Standards
-We aren't too picky on what your code looks like as long as it's easy to read and filter through; keep it clean.
+If you're interested in contributing to Absolute, please check out the main repository's [CONTRIBUTING.md]([docs/CONTRIBUTING.md](https://github.com/Toxocious/Absolute/blob/master/docs/CONTRIBUTING.md)) for more information.
 
 
 
 ## License
-This project is licensed under GNU GPL 3.
+This project is licensed under MIT.
 
 For more information about the license, check out the [LICENSE](LICENSE).
