@@ -2,7 +2,10 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 
+import { config, validateEnvironment } from './util/validate-env';
+
 import { SERVER_PORT } from './config/server';
+
 import MySQL from './classes/mysql';
 import Absol from './classes/server';
 
@@ -10,39 +13,37 @@ let AbsolServer: Absol;
 
 let initType: string;
 process.argv.forEach((arg, index) => {
-  index === 2 ? (initType = arg) : '';
+    index === 2 ? (initType = arg) : '';
 });
 
+// Validate our environment variables.
+// Exits the process if any required values are not found/set.
+validateEnvironment();
+
+// Prep server instance and ssl certs.
 let SERVER_INSTANCE: http.Server;
 let SERVER_SSL: Object = {};
 if (fs.existsSync('/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem')) {
-  try {
-    SERVER_SSL = {
-      cert: fs.readFileSync(
-        '/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem'
-      ),
-      key: fs.readFileSync(
-        '/etc/letsencrypt/live/www.absoluterpg.com/privkey.pem'
-      ),
-    };
-  } catch (error) {
-    console.log(
-      '[Absolute Chat | Init] Production SSL certs not found.',
-      error
-    );
+    try {
+        SERVER_SSL = {
+            cert: fs.readFileSync('/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem'),
+            key: fs.readFileSync('/etc/letsencrypt/live/www.absoluterpg.com/privkey.pem'),
+        };
+    } catch (error) {
+        console.log('[Absolute Chat | Init] Production SSL certs not found.', error);
 
-    process.exit();
-  }
+        process.exit();
+    }
 
-  SERVER_INSTANCE = https.createServer(SERVER_SSL).listen(SERVER_PORT);
+    SERVER_INSTANCE = https.createServer(SERVER_SSL).listen(SERVER_PORT);
 } else {
-  SERVER_INSTANCE = http.createServer().listen(SERVER_PORT);
+    SERVER_INSTANCE = http.createServer().listen(SERVER_PORT);
 }
 
 const MYSQL_INSTANCE: MySQL = MySQL.instance;
 MYSQL_INSTANCE.connectDatabase().finally(() => {
-  if (MYSQL_INSTANCE.isConnected()) {
-    AbsolServer = new Absol();
-    AbsolServer.start(SERVER_INSTANCE, initType);
-  }
+    if (MYSQL_INSTANCE.isConnected()) {
+        AbsolServer = new Absol();
+        AbsolServer.start(SERVER_INSTANCE, initType);
+    }
 });

@@ -37,16 +37,17 @@ export default class Absol {
      * Create a new server instance.
      */
     this.server = new Server(server, {
-      allowEIO3: true,
-      connectTimeout: 30000,
-      cors: {
-        origin: [
-          'http://localhost',
-          'https://absoluterpg.com',
-          'https://www.absoluterpg.com',
-        ],
-        credentials: true,
-      },
+        allowEIO3: true,
+        connectTimeout: 30000,
+        cors: {
+            origin: [
+                'http://localhost',
+                'https://localhost',
+                'https://absoluterpg.com',
+                'https://www.absoluterpg.com',
+            ],
+            credentials: true,
+        },
     });
 
     /**

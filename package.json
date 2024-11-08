@@ -1,22 +1,25 @@
 {
-  "name": "absol_ts",
+  "name": "absol-chat",
   "version": "1.0.0",
-  "description": "Real-time socket-based chat system for Pokemon Absolute",
-  "main": "./src/server/index.js",
+  "description": "A real-time socket-based chat system for Pokemon Absolute",
+  "repository": "https://github.com/Toxocious/Absolute-Chat.git",
+  "author": "Jess <toxocious@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "main": "./bot/server/index.js",
   "scripts": {
     "build": "tsc",
     "dev": "nodemon ./src/server/index.ts",
     "start": "node ./build/server/index.js",
     "prod": "tsc && node ./build/server/index.js"
   },
-  "author": "toxocious",
-  "license": "ISC",
-  "private": true,
   "dependencies": {
     "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.0",
     "mysql2": "^2.3.3",
     "socket.io": "^4.5.0",
-    "socket.io-client": "^4.5.0"
+    "socket.io-client": "^4.5.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
