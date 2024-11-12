@@ -1,4 +1,4 @@
-import { getRandomPokemon } from '../../util/get-random-pokemon';
+import { GetRandomPokemon } from '../../util/GetRandomPokemon';
 
 export = {
     name: 'randpkmn',
@@ -8,7 +8,7 @@ export = {
     args: false,
 
     execute: async () => {
-        let RANDOM_POKEMON: any[] | undefined = await getRandomPokemon();
+        let RANDOM_POKEMON: any[] | undefined = await GetRandomPokemon();
 
         if (typeof RANDOM_POKEMON === 'undefined') {
             return {

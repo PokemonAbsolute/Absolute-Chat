@@ -1,16 +1,16 @@
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 
-import User from './user';
-import MessageHandler from './message-handler';
+import User from './UserManager';
+import { MessageHandler } from './MessageManager';
 import { CommandManager } from './CommandManager';
 
-import MessageInterface, { InputMessageInterface } from '../types/message';
+import MessageInterface, { InputMessageInterface } from '../types/MessageInterface';
 
 export default class Absol {
     private server: Server | undefined;
 
-    private messageHandler: MessageHandler;
+    private MessageHandler: MessageHandler;
     private commandManager!: CommandManager;
 
     private clientPool: User[] = [];
@@ -23,7 +23,7 @@ export default class Absol {
     public messageBuffer: MessageInterface[] = [];
 
     constructor() {
-        this.messageHandler = new MessageHandler();
+        this.MessageHandler = new MessageHandler();
     }
 
     /**
@@ -50,7 +50,7 @@ export default class Absol {
         /**
          * Initialize the CommandManager and pass the server instance to it.
          */
-        this.commandManager = new CommandManager(this, this.server, this.messageHandler);
+        this.commandManager = new CommandManager();
 
         /**
          * Handle connections to the server.
@@ -103,7 +103,7 @@ export default class Absol {
                 if (await client.getBan()) {
                     socket.emit(
                         'chat-message',
-                        this.messageHandler.sendBotMessage(
+                        this.MessageHandler.SendBotMessage(
                             `You are banned, ${client.userData?.Username}.`,
                             true,
                             client.userData?.ID
@@ -120,7 +120,7 @@ export default class Absol {
                 if (this.isSpamming(client)) {
                     socket.emit(
                         'chat-message',
-                        this.messageHandler.sendBotMessage(
+                        this.MessageHandler.SendBotMessage(
                             `Please send fewer messages, ${client.userData?.Username}.`,
                             true,
                             client.userData?.ID
@@ -136,7 +136,7 @@ export default class Absol {
                 if (chatData.text.length > this.messageCharLimit) {
                     socket.emit(
                         'chat-message',
-                        this.messageHandler.sendBotMessage(
+                        this.MessageHandler.SendBotMessage(
                             `Messages must be ${this.messageCharLimit} characters or less, ${client.userData?.Username}.`,
                             true,
                             client.userData?.ID
@@ -146,15 +146,21 @@ export default class Absol {
                     return;
                 }
 
-                this.messageBuffer.push(this.messageHandler.sendMessage(chatData.text, client));
+                this.messageBuffer.push(this.MessageHandler.SendMessage(chatData.text, client));
 
+                /**
+                 * Pass the message to the command handler in case it is a command.
+                 */
                 const commandResult = await this.commandManager.ProcessCommand(chatData);
                 if (typeof commandResult !== 'undefined') {
                     this.messageBuffer.push(
-                        this.messageHandler.sendBotMessage(commandResult, true, chatData.user.ID)
+                        this.MessageHandler.SendBotMessage(commandResult, true, chatData.user.ID)
                     );
                 }
 
+                /**
+                 * Emit all messages in the buffer to all clients.
+                 */
                 for (const Message of this.messageBuffer) {
                     socket.emit('chat-message', Message);
                     this.messagePool.push(Message);
@@ -168,17 +174,17 @@ export default class Absol {
         let initMessage: MessageInterface;
         switch (initType) {
             case 'debug':
-                initMessage = this.messageHandler.sendBotMessage(
+                initMessage = this.MessageHandler.SendBotMessage(
                     'Absolute Chat has started in debug mode.'
                 );
                 break;
 
             case 'update':
-                initMessage = this.messageHandler.sendBotMessage('Absolute has been updated!');
+                initMessage = this.MessageHandler.SendBotMessage('Absolute has been updated!');
                 break;
 
             default:
-                initMessage = this.messageHandler.sendBotMessage('Absolute Chat is online.');
+                initMessage = this.MessageHandler.SendBotMessage('Absolute Chat is online.');
                 break;
         }
 
@@ -219,7 +225,7 @@ export default class Absol {
      * Check if the client is spamming.
      */
     private isSpamming(client: User): boolean {
-        const TIME_LIMIT = Math.round(Date.now()) - this.spamCheckIntervalSec * 1000;
+        const TIME_LIMIT = Math.round(Date.now()) - this.spamCheckIntervalSec * 1_000;
 
         const RECENT_MESSAGE_COUNT = this.messagePool.filter(
             (message) => message.sentOn >= TIME_LIMIT && message.userID === client.userData?.ID

@@ -1,15 +1,14 @@
-import User from './user';
-import Log from './log';
+import User from './UserManager';
+import Log from './LogManager';
 
-import MessageInterface from '../types/message';
-import UserInterface from '../types/user';
+import MessageInterface from '../types/MessageInterface';
+import UserInterface from '../types/UserInterface';
 
-export default class Message {
+class Message {
     private message: string;
     private sentOn: number;
     private isPrivate: boolean = false;
     private isPrivateTo: number;
-    private isCommand: boolean = false;
 
     constructor(message: string, isPrivate?: boolean, isPrivateTo?: number) {
         this.message = message;
@@ -63,5 +62,24 @@ export default class Message {
             isPrivateTo: this.isPrivateTo,
             sentOn: this.sentOn,
         };
+    }
+}
+
+export class MessageHandler {
+    public SendMessage(
+        message: string,
+        sentBy: User,
+        isPrivate?: boolean,
+        isPrivateTo?: number
+    ): MessageInterface {
+        return new Message(message, isPrivate, isPrivateTo).fromUser(sentBy);
+    }
+
+    public SendBotMessage(
+        message: string,
+        isPrivate?: boolean,
+        isPrivateTo?: number
+    ): MessageInterface {
+        return new Message(message, isPrivate, isPrivateTo).fromBot();
     }
 }

@@ -1,7 +1,7 @@
-import MySQL from '../classes/mysql';
+import DatabaseManager from './DatabaseManager';
 
-import UserInterface from '../types/user';
-import BanInterface from '../types/ban';
+import UserInterface from '../types/UserInterface';
+import BanInterface from '../types/BanInterface';
 
 export default class User {
     private userID: number;
@@ -24,7 +24,7 @@ export default class User {
     }
 
     public async init(): Promise<boolean> {
-        const USER_DATA: any[] | undefined = await MySQL.doQuery(
+        const USER_DATA: any[] | undefined = await DatabaseManager.doQuery(
             'SELECT `ID`, `Username`, `Rank`, `Auth_Code`, `Avatar` FROM `users` WHERE `ID` = ? LIMIT 1',
             [this.userID]
         );
@@ -50,7 +50,7 @@ export default class User {
             return false;
         }
 
-        await MySQL.doQuery(
+        await DatabaseManager.doQuery(
             'INSERT INTO `user_bans` (`User_ID`, `Banned_By`, `Banned_On`, `Chat_Ban`, `Chat_Ban_Reason`, `Chat_Ban_Until`) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `Banned_By`, `Banned_On`, `Chat_Ban`, `Chat_Ban_Reason`, `Chat_Ban_Until`',
             [
                 this.userData.ID,
@@ -70,7 +70,7 @@ export default class User {
             return false;
         }
 
-        const BAN_DATA: any[] | undefined = await MySQL.doQuery(
+        const BAN_DATA: any[] | undefined = await DatabaseManager.doQuery(
             'SELECT * FROM `user_bans` WHERE `User_ID` = ? AND (`RPG_Ban` = 1 OR `Chat_Ban` = 1) LIMIT 1',
             [this.userData.ID]
         );

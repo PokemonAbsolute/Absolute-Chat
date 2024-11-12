@@ -11,7 +11,7 @@ export = {
     execute: () => {
         let messageData: string = '';
 
-        const commandsPath = path.join(__dirname, '../commands');
+        const commandsPath = path.join(__dirname, '..');
         const commandCategories = fs.readdirSync(commandsPath);
 
         for (const category of commandCategories) {

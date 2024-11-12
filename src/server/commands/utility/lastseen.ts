@@ -1,6 +1,6 @@
-import MySQL from '../../classes/mysql';
+import DatabaseManager from '../../classes/DatabaseManager';
 
-import { lastSeenOn } from '../../util/last-seen';
+import { LastSeenOn } from '../../util/FormatLastSeenTimestamp';
 
 export = {
     name: 'lastseen',
@@ -11,7 +11,7 @@ export = {
 
     execute: async (args: string[]) => {
         const USER_IDENTIFIER: string = args[0].toLocaleString();
-        const USER_LAST_SEEN: any = await MySQL.doQuery(
+        const USER_LAST_SEEN: any = await DatabaseManager.doQuery(
             'SELECT `Username`, `Last_Active` FROM `users` WHERE `ID` = ? OR UPPER(`Username`) = UPPER(?) LIMIT 1',
             [USER_IDENTIFIER, USER_IDENTIFIER]
         );
@@ -22,7 +22,7 @@ export = {
             };
         }
 
-        const LAST_SEEN_DATE = lastSeenOn(USER_LAST_SEEN[0].Last_Active);
+        const LAST_SEEN_DATE = LastSeenOn(USER_LAST_SEEN[0].Last_Active);
 
         return {
             message: `

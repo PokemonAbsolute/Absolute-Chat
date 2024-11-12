@@ -1,4 +1,4 @@
-import { getPokemonRarity } from '../../util/get-pokemon-rarity';
+import { GetPokemonRarity } from '../../util/GetPokemonRarity';
 
 export = {
     name: 'rarity',
@@ -11,11 +11,11 @@ export = {
         let RARITY_DATA: any[] | undefined;
         switch (args.length) {
             case 1:
-                RARITY_DATA = await getPokemonRarity(args[0]);
+                RARITY_DATA = await GetPokemonRarity(args[0]);
                 break;
 
             case 2:
-                RARITY_DATA = await getPokemonRarity(args[0], args[1]);
+                RARITY_DATA = await GetPokemonRarity(args[0], args[1]);
                 break;
 
             default:

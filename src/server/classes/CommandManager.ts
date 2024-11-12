@@ -1,35 +1,21 @@
 import fs from 'fs';
 import path from 'path';
 
-import { Server as SocketServer } from 'socket.io';
-
-import Server from './server';
-import MessageHandler from './message-handler';
-import Log from './log';
-
-import { CommandInterface } from '../types/command';
-import { InputMessageInterface } from '../types/message';
-import UserInterface from '../types/user';
+import { CommandInterface } from '../types/CommandInterface';
+import { InputMessageInterface } from '../types/MessageInterface';
+import UserInterface from '../types/UserInterface';
 
 /**
  * The CommandManager class handles the loading, unloading, and execution of commands.
  */
 export class CommandManager {
-    private absolServer: Server;
-    private socketServer: SocketServer;
-    private messageHandler: MessageHandler;
-
     private commands: Map<any, any> = new Map();
     private categories: Map<string, any> = new Map();
     private cooldowns: Map<string, any> = new Map();
 
     private commandPrefix: string = '!';
 
-    constructor(absolServer: Server, socketServer: SocketServer, messageHandler: MessageHandler) {
-        this.absolServer = absolServer;
-        this.socketServer = socketServer;
-        this.messageHandler = messageHandler;
-    }
+    constructor() {}
 
     /**
      * Loads all commands from the /commands directory and all subdirectories.
@@ -61,8 +47,8 @@ export class CommandManager {
 
                     console.log(`Loaded command: ${command.name}`);
                 } else {
-                    console.warn(`Failed to load command: ${commandPath}`);
-                    console.warn(command);
+                    // @ts-ignore
+                    console.warn(`Missing 'execute' function in command ${command.name}`);
                 }
             }
         }
@@ -83,7 +69,7 @@ export class CommandManager {
         const now = Date.now();
         const timestamps = this.cooldowns.get(command.name);
         const cooldownAmount =
-            (command?.cooldown ?? 3) * (user.Rank != 'Member' ? 0 : cooldownModifier);
+            (command?.cooldown ?? 3) * (user.Rank != 'Member' ? 0 : cooldownModifier * 1_000);
 
         if (timestamps.has(user.ID)) {
             const expirationTime = timestamps.get(user.ID) + cooldownAmount;

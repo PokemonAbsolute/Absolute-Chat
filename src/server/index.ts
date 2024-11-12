@@ -2,12 +2,10 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 
-import { config, validateEnvironment } from './util/validate-env';
+import { ValidateEnvironment } from './util/ValidateEnvironment';
 
-import { SERVER_PORT } from './config/server';
-
-import MySQL from './classes/mysql';
-import Absol from './classes/server';
+import DatabaseManager from './classes/DatabaseManager';
+import Absol from './classes/Absol';
 
 let AbsolServer: Absol;
 
@@ -18,7 +16,9 @@ process.argv.forEach((arg, index) => {
 
 // Validate our environment variables.
 // Exits the process if any required values are not found/set.
-validateEnvironment();
+ValidateEnvironment();
+
+const SERVER_PORT = 8080;
 
 // Prep server instance and ssl certs.
 let SERVER_INSTANCE: http.Server;
@@ -40,7 +40,7 @@ if (fs.existsSync('/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem')) {
     SERVER_INSTANCE = http.createServer().listen(SERVER_PORT);
 }
 
-const MYSQL_INSTANCE: MySQL = MySQL.instance;
+const MYSQL_INSTANCE: DatabaseManager = DatabaseManager.instance;
 MYSQL_INSTANCE.connectDatabase().finally(() => {
     if (MYSQL_INSTANCE.isConnected()) {
         AbsolServer = new Absol();

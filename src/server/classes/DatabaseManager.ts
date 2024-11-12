@@ -1,12 +1,12 @@
-import { config } from '../util/validate-env';
+import { config } from '../util/ValidateEnvironment';
 
 import * as mysql from 'mysql2/promise';
 
-export default class MySQL {
-    private static _instance: MySQL;
+export default class DatabaseManager {
+    private static _instance: DatabaseManager;
     private connection: mysql.Connection | undefined;
 
-    public static get instance(): MySQL {
+    public static get instance(): DatabaseManager {
         return this._instance || (this._instance = new this());
     }
 

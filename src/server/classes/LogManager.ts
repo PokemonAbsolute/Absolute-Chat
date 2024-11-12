@@ -1,8 +1,8 @@
 import { AES } from 'crypto-js';
 
-import MySQL from './mysql';
+import DatabaseManager from './DatabaseManager';
 
-import UserInterface from '../types/user';
+import UserInterface from '../types/UserInterface';
 
 export default class Log {
     public static async ToDatabase(
@@ -14,7 +14,7 @@ export default class Log {
     ): Promise<void> {
         const ENCRYPTED_MESSAGE = AES.encrypt(message, sentBy.toString()).toString();
 
-        await MySQL.doQuery(
+        await DatabaseManager.doQuery(
             'INSERT INTO `chat_logs` (`Message`, `Sent_By`, `Sent_On`, `Is_Private`, `Private_To`) VALUES (?, ?, ?, ?, ?)',
             [ENCRYPTED_MESSAGE, sentBy.ID, sentOn, isPrivate, privateTo]
         );
