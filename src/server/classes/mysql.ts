@@ -39,12 +39,6 @@ export default class MySQL {
 
     public async connectDatabase(): Promise<void> {
         console.log('[Chat | Connection] Connecting to MySQL database for Absolute Chat...');
-        console.log(
-            '\t' + `DATABASE_HOST = ${config.DATABASE_HOST}`,
-            '\t' + `DATABASE_USER = ${config.DATABASE_USER}`,
-            '\t' + `DATABASE_PASSWORD = ${config.DATABASE_PASSWORD}`,
-            '\t' + `DATABASE_TABLE = ${config.DATABASE_TABLE}`
-        );
 
         return mysql
             .createConnection({
@@ -53,10 +47,13 @@ export default class MySQL {
                 password: config.DATABASE_PASSWORD ?? 'qwerty',
                 database: config.DATABASE_TABLE ?? 'absolute',
             })
-            .then((connection): void => {
+            .then((connection: mysql.Connection): void => {
+                console.log(
+                    '[Chat | Connection] Successfully connected to MySQL database for Absolute Chat.'
+                );
                 this.connection = connection;
             })
-            .catch((error): void => {
+            .catch((error: string): void => {
                 console.log(
                     '[Chat | Connection] Failed to create MySQL connection for Absolute Chat. [Error]:',
                     error
