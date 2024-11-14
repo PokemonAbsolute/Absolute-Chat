@@ -6,20 +6,23 @@
 
   This repository contains the source code for the [Pok&eacute;mon Absolute](https://github.com/Toxocious/Absolute) real time chat system.
 
-  <img src="https://img.shields.io/github/issues/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
-  <img src="https://img.shields.io/github/forks/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
-  <img src="https://img.shields.io/github/stars/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+  <img alt="Github Issues" src="https://img.shields.io/github/issues/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+  <img alt="Github Forks" src="https://img.shields.io/github/forks/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+  <img alt="Github Stars" src="https://img.shields.io/github/stars/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
   <br />
-  <img src="https://img.shields.io/github/license/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
-  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FToxocious%Absolute-Chat">
-    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FToxocious%Absolute-Chat&countColor=%2337d67a" />
-  </a>
-  <br /><br />
 
-  Check us out on Discord and consider starring the repository if you liked it!
+  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/Toxocious/Absolute-Chat?style=for-the-badge">
+  <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat">
+    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FToxocious%2FAbsolute-Chat&label=VIEWS&countColor=%234a618f" />
+  </a>
+  <br />
+
+  <img alt="License" src="https://img.shields.io/github/license/Toxocious/Absolute-Chat?style=for-the-badge&logo=appveyor" />
+
+  Come join our comfy community over on Discord!
 
   <a href="https://discord.gg/SHnvbsS" target="_blank">
-    <img src="https://discord.com/api/guilds/269182206621122560/widget.png?style=banner2" alt="Discord Banner" />
+    <img src="https://discord.com/api/guilds/269182206621122560/widget.png?style=banner2" alt="Discord Invite Banner" />
   </a>
 </div>
 
@@ -51,6 +54,7 @@
 - User authentication based on unique auth codes set upon account registration
 - Includes numerous custom chat commands for user entertainment and utility
 - Prevents clients from spamming numerous messages over a short period of time
+- Modular approach to development when implementing new features
 
 
 
