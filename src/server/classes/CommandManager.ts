@@ -3,7 +3,7 @@ import path from 'path';
 
 import { CommandInterface } from '../types/CommandInterface';
 import { InputMessageInterface } from '../types/MessageInterface';
-import UserInterface from '../types/UserInterface';
+import { UserInterface } from '../types/UserInterface';
 
 /**
  * The CommandManager class handles the loading, unloading, and execution of commands.
@@ -44,8 +44,6 @@ export class CommandManager {
                 if ('execute' in command) {
                     this.commands.set(command.name, command);
                     this.categories.get(category).set(command.name, command);
-
-                    console.log(`Loaded command: ${command.name}`);
                 } else {
                     // @ts-ignore
                     console.warn(`Missing 'execute' function in command ${command.name}`);
@@ -71,14 +69,14 @@ export class CommandManager {
         const cooldownAmount =
             (command?.cooldown ?? 3) * (user.Rank != 'Member' ? 0 : cooldownModifier * 1_000);
 
-        if (timestamps.has(user.ID)) {
-            const expirationTime = timestamps.get(user.ID) + cooldownAmount;
+        if (timestamps.has(user.User_ID)) {
+            const expirationTime = timestamps.get(user.User_ID) + cooldownAmount;
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
 
                 console.warn(
-                    `User ${user.ID} is on cooldown for command ${
+                    `User ${user.User_ID} is on cooldown for command ${
                         command.name
                     }. Time left: ${timeLeft.toFixed(1)}s`
                 );
@@ -87,8 +85,8 @@ export class CommandManager {
             }
         }
 
-        timestamps.set(user.ID, now);
-        setTimeout(() => timestamps.delete(user.ID), cooldownAmount);
+        timestamps.set(user.User_ID, now);
+        setTimeout(() => timestamps.delete(user.User_ID), cooldownAmount);
     }
 
     /**
@@ -105,7 +103,7 @@ export class CommandManager {
 
         if (typeof commandData == 'undefined') {
             console.warn(
-                `[CommandManager | ProcessCommand] Command not found: ${commandName} (User ID: ${messageData.user.ID})`
+                `[CommandManager | ProcessCommand] Command not found: ${commandName} (User ID: ${messageData.user.User_ID})`
             );
             return;
         }

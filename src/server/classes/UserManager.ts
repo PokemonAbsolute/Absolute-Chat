@@ -1,6 +1,6 @@
 import DatabaseManager from './DatabaseManager';
 
-import UserInterface from '../types/UserInterface';
+import { UserInterface } from '../types/UserInterface';
 import BanInterface from '../types/BanInterface';
 
 export default class User {
@@ -53,7 +53,7 @@ export default class User {
         await DatabaseManager.doQuery(
             'INSERT INTO `user_bans` (`User_ID`, `Banned_By`, `Banned_On`, `Chat_Ban`, `Chat_Ban_Reason`, `Chat_Ban_Until`) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `Banned_By`, `Banned_On`, `Chat_Ban`, `Chat_Ban_Reason`, `Chat_Ban_Until`',
             [
-                this.userData.ID,
+                this.userData.User_ID,
                 bannedBy,
                 Math.floor(Date.now() / 1000),
                 1,
@@ -72,7 +72,7 @@ export default class User {
 
         const BAN_DATA: any[] | undefined = await DatabaseManager.doQuery(
             'SELECT * FROM `user_bans` WHERE `User_ID` = ? AND (`RPG_Ban` = 1 OR `Chat_Ban` = 1) LIMIT 1',
-            [this.userData.ID]
+            [this.userData.User_ID]
         );
 
         if (typeof BAN_DATA === 'undefined' || BAN_DATA?.length === 0) {

@@ -21,17 +21,21 @@ export class SocketEvents {
      */
     public HandleConnect(): void {
         this.socket.on('connect', () => {
+            if (typeof this.absolute.user === 'undefined') {
+                console.log('[Chat | Client] User failed to connect.');
+                return;
+            }
+
             this.absolute.isActive = true;
-            this.absolute.user!.Connected = true;
+            this.absolute.user.Connected = true;
+
+            this.socket.emit('auth', {
+                User_ID: this.absolute.user.User_ID,
+                Auth_Code: this.absolute.user.Auth_Code,
+                Connected: this.absolute.user.Connected,
+            });
 
             console.log('[Chat | Client] A user has connected to the socket.');
-
-            // Emit the connection to the server.
-            // this.socket.emit('auth', {
-            //     UserID: this.absolute.user!.User_ID,
-            //     Auth_Code: this.absolute.user!.Auth_Code,
-            //     Connected: this.absolute.user!.Connected,
-            // });
         });
     }
 

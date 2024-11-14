@@ -17,7 +17,7 @@ export class Absolute {
     public user: UserInterface | undefined;
     public messages: any;
 
-    constructor() {
+    constructor(User: UserInterface) {
         this.socket = io.connect(`http://localhost:${this.port}`, {
             withCredentials: true,
             reconnectionDelay: 2000,
@@ -27,6 +27,8 @@ export class Absolute {
         });
 
         this.socketEvents = new SocketEvents(this, this.socket);
+
+        this.user = User;
     }
 
     /**
@@ -53,12 +55,9 @@ export class Absolute {
 
     /**
      * Initialize the socket for the client.
+     * Initializes specific socket event handlers.
      */
     public Initialize(): void {
-        /**
-         * Handle socket events.
-         * These are wrappers around socket.on() events.
-         */
         this.socketEvents.HandleConnect();
         this.socketEvents.HandleDisconnect();
         this.socketEvents.HandleMessage();

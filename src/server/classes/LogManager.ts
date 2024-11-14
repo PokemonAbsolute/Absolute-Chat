@@ -2,7 +2,7 @@ import { AES } from 'crypto-js';
 
 import DatabaseManager from './DatabaseManager';
 
-import UserInterface from '../types/UserInterface';
+import { UserInterface } from '../types/UserInterface';
 
 export default class Log {
     public static async ToDatabase(
@@ -16,7 +16,7 @@ export default class Log {
 
         await DatabaseManager.doQuery(
             'INSERT INTO `chat_logs` (`Message`, `Sent_By`, `Sent_On`, `Is_Private`, `Private_To`) VALUES (?, ?, ?, ?, ?)',
-            [ENCRYPTED_MESSAGE, sentBy.ID, sentOn, isPrivate, privateTo]
+            [ENCRYPTED_MESSAGE, sentBy.User_ID, sentOn, isPrivate, privateTo]
         );
     }
 }

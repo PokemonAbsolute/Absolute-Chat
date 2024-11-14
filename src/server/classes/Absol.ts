@@ -63,7 +63,7 @@ export default class Absol {
              */
             socket.on('auth', async (authObject): Promise<void> => {
                 console.log('Attempting to authorize:', authObject);
-                client = new User(authObject.UserID, authObject?.Auth_Code);
+                client = new User(authObject.User_ID, authObject?.Auth_Code);
                 if (!(await client.init())) {
                     return;
                 }
@@ -79,7 +79,7 @@ export default class Absol {
             socket.on('disconnect', (): void => {
                 if (typeof client !== 'undefined') {
                     this.clientPool = this.clientPool.filter(
-                        (tClient) => tClient.userData?.ID !== client.userData?.ID
+                        (tClient) => tClient.userData?.User_ID !== client.userData?.User_ID
                     );
                 }
             });
@@ -106,7 +106,7 @@ export default class Absol {
                         this.MessageHandler.SendBotMessage(
                             `You are banned, ${client.userData?.Username}.`,
                             true,
-                            client.userData?.ID
+                            client.userData?.User_ID
                         )
                     );
 
@@ -123,7 +123,7 @@ export default class Absol {
                         this.MessageHandler.SendBotMessage(
                             `Please send fewer messages, ${client.userData?.Username}.`,
                             true,
-                            client.userData?.ID
+                            client.userData?.User_ID
                         )
                     );
 
@@ -139,7 +139,7 @@ export default class Absol {
                         this.MessageHandler.SendBotMessage(
                             `Messages must be ${this.messageCharLimit} characters or less, ${client.userData?.Username}.`,
                             true,
-                            client.userData?.ID
+                            client.userData?.User_ID
                         )
                     );
 
@@ -154,7 +154,11 @@ export default class Absol {
                 const commandResult = await this.commandManager.ProcessCommand(chatData);
                 if (typeof commandResult !== 'undefined') {
                     this.messageBuffer.push(
-                        this.MessageHandler.SendBotMessage(commandResult, true, chatData.user.ID)
+                        this.MessageHandler.SendBotMessage(
+                            commandResult,
+                            true,
+                            chatData.user.User_ID
+                        )
                     );
                 }
 
@@ -215,7 +219,7 @@ export default class Absol {
         }
 
         for (const message of messagesToUse) {
-            if (!message.isPrivate || message.isPrivateTo === client.userData?.ID) {
+            if (!message.isPrivate || message.isPrivateTo === client.userData?.User_ID) {
                 this.server.emit('chat-message', message);
             }
         }
@@ -228,7 +232,7 @@ export default class Absol {
         const TIME_LIMIT = Math.round(Date.now()) - this.spamCheckIntervalSec * 1_000;
 
         const RECENT_MESSAGE_COUNT = this.messagePool.filter(
-            (message) => message.sentOn >= TIME_LIMIT && message.userID === client.userData?.ID
+            (message) => message.sentOn >= TIME_LIMIT && message.userID === client.userData?.User_ID
         ).length;
 
         return RECENT_MESSAGE_COUNT >= this.spamCheckMessageCount;

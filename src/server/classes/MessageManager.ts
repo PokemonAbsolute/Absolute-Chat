@@ -2,7 +2,7 @@ import User from './UserManager';
 import Log from './LogManager';
 
 import MessageInterface from '../types/MessageInterface';
-import UserInterface from '../types/UserInterface';
+import { UserInterface } from '../types/UserInterface';
 
 class Message {
     private message: string;
@@ -29,7 +29,7 @@ class Message {
         }
 
         return {
-            userID: sentBy.userData?.ID,
+            userID: sentBy.userData?.User_ID,
             userName: sentBy.userData?.Username,
             userRank: sentBy.userData?.Rank,
             userAvatar: sentBy.userData?.Avatar,
@@ -42,7 +42,7 @@ class Message {
 
     public fromBot(): MessageInterface {
         const sentBy: UserInterface = {
-            ID: -1,
+            User_ID: -1,
             Username: 'Absol',
             Rank: 'Bot',
             Auth_Code: 'AbsolBotAuthCode',
@@ -53,7 +53,7 @@ class Message {
         Log.ToDatabase(this.message, sentBy, this.sentOn, this.isPrivate, this.isPrivateTo);
 
         return {
-            userID: sentBy.ID,
+            userID: sentBy.User_ID,
             userName: sentBy.Username,
             userRank: sentBy.Rank,
             userAvatar: sentBy.Avatar,

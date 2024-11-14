@@ -1,4 +1,4 @@
-import UserInterface from './UserInterface';
+import { UserInterface } from './UserInterface';
 
 export default interface MessageInterface {
     userID: number | undefined;

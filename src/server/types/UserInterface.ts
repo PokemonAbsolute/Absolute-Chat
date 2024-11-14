@@ -1,5 +1,5 @@
-export default interface UserInterface {
-    ID: number;
+export interface UserInterface {
+    User_ID: number;
     Username: string;
     Rank:
         | 'Member'
