@@ -73,6 +73,7 @@ export class SocketEvents {
                     Text: 'You have been disconnected from the chat.',
                     Private: true,
                     Private_To: this.absolute.user!.User_ID,
+                    Timestamp: new Date().getTime(),
                 },
             });
 
@@ -104,16 +105,6 @@ export class SocketEvents {
             console.log('[Chat | Client] Received a message from the server socket:', data);
 
             this.messageHandler.AddMessage(data);
-        });
-    }
-
-    /**
-     * Handle fetching message history from the server socket.
-     */
-    public GetServerHistory(): void {
-        console.log("[Chat | Client] Watching for 'chat-history' events.");
-        this.socket.on('chat-history', (data: Map<number, MessageInterface>) => {
-            console.log('[Chat | Client] Received message history from the server socket:', data);
         });
     }
 }
