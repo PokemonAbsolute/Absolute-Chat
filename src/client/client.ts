@@ -2,7 +2,7 @@ import { DefaultEventsMap } from 'socket.io';
 
 import * as io from 'socket.io-client';
 
-import { SocketEvents } from './events/Socket';
+import { SocketEvents } from './classes/Socket';
 
 import { UserInterface } from './types/User';
 
@@ -61,5 +61,6 @@ export class Absolute {
         this.socketEvents.HandleConnect();
         this.socketEvents.HandleDisconnect();
         this.socketEvents.HandleMessage();
+        this.socketEvents.GetServerHistory();
     }
 }

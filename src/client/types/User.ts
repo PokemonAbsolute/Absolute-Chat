@@ -13,3 +13,8 @@ export interface UserInterface {
     Avatar: string;
     Connected: boolean;
 }
+
+export interface UserMessageInterface extends Omit<UserInterface, 'Connected' | 'Auth_Code'> {
+    Connected?: boolean;
+    Auth_Code?: string;
+}
