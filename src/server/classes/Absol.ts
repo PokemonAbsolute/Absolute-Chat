@@ -9,7 +9,7 @@ import { MessageInterface } from '../types/MessageInterface';
 import { UserInterface } from '../types/UserInterface';
 
 export default class Absol {
-    private server: Server | undefined;
+    public server: Server | undefined;
     private socketEvents: SocketEvents | undefined;
 
     //
@@ -19,56 +19,64 @@ export default class Absol {
     //
     public connectedUsers: Map<string, UserInterface> = new Map();
 
+    //
+    private initialized: boolean = false;
+
     /**
      * Constructor
      */
     constructor(server: http.Server, initType: string) {
-        /**
-         * Create a new server instance.
-         */
-        this.server = new Server(server, {
-            allowEIO3: true,
-            connectTimeout: 30000,
-            cors: {
-                origin: [
-                    'http://localhost',
-                    'https://localhost',
-                    'https://absoluterpg.com',
-                    'https://www.absoluterpg.com',
-                ],
-                credentials: true,
-            },
-        });
+        if (!this.initialized) {
+            console.log('[Chat | Server] Initializing new server instance.');
+            this.initialized = true;
 
-        /**
-         * Initialize the CommandManager and load chat commands.
-         */
-        this.commandManager = new CommandManager();
-        this.commandManager.LoadCommands();
+            /**
+             * Create a new server instance.
+             */
+            this.server = new Server(server, {
+                allowEIO3: true,
+                connectTimeout: 30000,
+                cors: {
+                    origin: [
+                        'http://localhost',
+                        'https://localhost',
+                        'https://absoluterpg.com',
+                        'https://www.absoluterpg.com',
+                    ],
+                    credentials: true,
+                },
+            });
 
-        this.messageManager = new MessageManager();
+            /**
+             * Initialize the CommandManager and load chat commands.
+             */
+            this.commandManager = new CommandManager();
+            this.commandManager.LoadCommands();
 
-        /**
-         * Emit a welcoming message when the server initially boots.
-         */
-        let initMessage: MessageInterface;
-        switch (initType) {
-            case 'debug':
-                initMessage = this.messageManager.SendBotMessage(
-                    'Absolute Chat has started in debug mode.'
-                );
-                break;
+            this.messageManager = new MessageManager();
 
-            case 'update':
-                initMessage = this.messageManager.SendBotMessage('Absolute has been updated!');
-                break;
+            /**
+             * Emit a welcoming message when the server initially boots.
+             */
+            let initMessage: MessageInterface;
+            switch (initType) {
+                case 'debug':
+                    initMessage = this.messageManager.SendBotMessage(
+                        'Absolute Chat has started in debug mode.'
+                    );
+                    break;
 
-            default:
-                initMessage = this.messageManager.SendBotMessage('Absolute Chat is online.');
-                break;
+                case 'update':
+                    initMessage = this.messageManager.SendBotMessage('Absolute has been updated!');
+                    break;
+
+                default:
+                    initMessage = this.messageManager.SendBotMessage('Absolute Chat is online.');
+                    break;
+            }
+
+            this.server.emit('chat-message', initMessage);
         }
-
-        this.server.emit('chat-message', initMessage);
     }
 
     /**

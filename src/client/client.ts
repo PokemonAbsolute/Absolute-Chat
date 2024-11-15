@@ -7,7 +7,7 @@ import { SocketEvents } from './classes/Socket';
 import { UserInterface } from './types/User';
 
 export class Absolute {
-    private socket: io.Socket<DefaultEventsMap, DefaultEventsMap>;
+    public socket: io.Socket<DefaultEventsMap, DefaultEventsMap>;
     private port: number = 8080;
 
     private socketEvents: SocketEvents;

@@ -7,13 +7,6 @@ import { ValidateEnvironment } from './util/ValidateEnvironment';
 import DatabaseManager from './classes/DatabaseManager';
 import Absol from './classes/Absol';
 
-let AbsolServer: Absol;
-
-let initType: string;
-process.argv.forEach((arg, index) => {
-    index === 2 ? (initType = arg) : '';
-});
-
 // Validate our environment variables.
 // Exits the process if any required values are not found/set.
 ValidateEnvironment();
@@ -40,10 +33,16 @@ if (fs.existsSync('/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem')) {
     SERVER_INSTANCE = http.createServer().listen(SERVER_PORT);
 }
 
+let initType: string;
+process.argv.forEach((arg, index) => {
+    index === 2 ? (initType = arg) : '';
+});
+
 const MYSQL_INSTANCE: DatabaseManager = DatabaseManager.instance;
 MYSQL_INSTANCE.connectDatabase().finally(() => {
     if (MYSQL_INSTANCE.isConnected()) {
-        AbsolServer = new Absol(SERVER_INSTANCE, initType);
+        console.log(' ~ [Chat | Index] MySQL connection established; starting new Absol() server.');
+        let AbsolServer: Absol = new Absol(SERVER_INSTANCE, '');
         AbsolServer.start();
     }
 });

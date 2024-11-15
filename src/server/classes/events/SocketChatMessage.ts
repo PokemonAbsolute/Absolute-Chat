@@ -35,7 +35,6 @@ export class SocketChatMessage {
         this.socket.on(
             'chat-message',
             async (ChatMessage: InputMessageInterface): Promise<void> => {
-                // Client doesn't exist or sent a mismatched auth code.
                 const User = this.absol.connectedUsers.get(this.socket.id);
                 if (typeof User == 'undefined' || ChatMessage.User.Auth_Code !== User.Auth_Code) {
                     console.log(
@@ -48,9 +47,9 @@ export class SocketChatMessage {
                 if (await IsUserBanned(User.User_ID)) {
                     console.log('[Chat | Server] User is banned.');
 
-                    const ChatMessage = 'You are banned from chatting.';
+                    const ChatBotMessage = 'You are banned from chatting.';
                     const BotMessage = this.absol.messageManager.SendBotMessage(
-                        ChatMessage,
+                        ChatBotMessage,
                         true,
                         User.User_ID
                     );
@@ -66,9 +65,9 @@ export class SocketChatMessage {
                 if (this.isSpamming(User)) {
                     console.log('[Chat | Server] User is spamming.');
 
-                    const ChatMessage = 'You are sending messages to quickly.';
+                    const ChatBotMessage = 'You are sending messages to quickly.';
                     const BotMessage = this.absol.messageManager.SendBotMessage(
-                        ChatMessage,
+                        ChatBotMessage,
                         true,
                         User.User_ID
                     );
@@ -82,9 +81,9 @@ export class SocketChatMessage {
                 if (ChatMessage.Message.Text.length > this.messageCharLimit) {
                     console.log('[Chat | Server] User sent a message over the character limit.');
 
-                    const ChatMessage = `Please keep messages at or under ${this.messageCharLimit} characters.`;
+                    const ChatBotMessage = `Please keep messages at or under ${this.messageCharLimit} characters.`;
                     const BotMessage = this.absol.messageManager.SendBotMessage(
-                        ChatMessage,
+                        ChatBotMessage,
                         true,
                         User.User_ID
                     );
@@ -99,7 +98,7 @@ export class SocketChatMessage {
                     ChatMessage
                 );
 
-                this.socket.emit('chat-message', ChatMessage);
+                this.absol.server?.emit('chat-message', ChatMessage);
                 this.messageManager.AddMessage(ChatMessage);
             }
         );

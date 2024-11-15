@@ -34,8 +34,9 @@ export class SocketAuth {
             const messageHistory = this.absol.messageManager.FetchMessages(client.userData);
 
             if (messageHistory.size > 0) {
-                this.socket.emit('chat-message', messageHistory.get(0)!);
-                this.absol.messageManager.AddMessage(messageHistory.get(0)!);
+                for (const [_, Message] of messageHistory.entries()) {
+                    this.socket.emit('chat-message', Message);
+                }
             }
         });
     }

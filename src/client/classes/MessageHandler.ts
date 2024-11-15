@@ -1,7 +1,6 @@
 import { Absolute } from '../client';
 
 import { MessageInterface } from '../types/Message';
-import { UserInterface } from '../types/User';
 
 export class MessageHandler {
     private absolute: Absolute;
@@ -41,7 +40,9 @@ export class MessageHandler {
 
         this.messages.forEach((Message, Message_ID) => {
             MessageHtml += `
-                <div class='message' data-msg-id='${Message_ID}'>
+                <div class='message${
+                    Message.Message.Private ? ' private' : ''
+                }' data-msg-id='${Message_ID}'>
                   <div class="avatar">
                     <a href='/profile.php?id=${Message.User.User_ID}'>
                       <img src="/images/${Message.User.Avatar}" />
@@ -52,7 +53,11 @@ export class MessageHandler {
                       <b class='${Message.User.Rank}'>${Message.User.Username}</b>
                     </a>
                     <br />
-                    ${Message.Message.Timestamp?.toLocaleString()}
+                    ${
+                        Message.Message.Timestamp
+                            ? new Date(Message.Message.Timestamp).toLocaleString().split(', ')[1]
+                            : ''
+                    }
                   </div>
                   <div class="text">
                     <div>
@@ -77,18 +82,22 @@ export class MessageHandler {
             return;
         }
 
+        console.log(messageData);
+
         const message: MessageInterface = {
             User: {
                 User_ID: messageData.User.User_ID,
                 Username: messageData.User.Username,
                 Rank: messageData.User.Rank,
                 Avatar: messageData.User.Avatar,
+                Auth_Code: messageData.User.Auth_Code,
             },
             Message: {
                 ID: this.messages.size,
                 Text: messageData.Message.Text,
                 Private: messageData.Message?.Private,
                 Private_To: messageData.Message?.Private_To,
+                Timestamp: messageData.Message?.Timestamp,
             },
         };
 
