@@ -2,12 +2,12 @@ import { AES } from 'crypto-js';
 
 import DatabaseManager from './DatabaseManager';
 
-import { UserInterface } from '../types/UserInterface';
+import { UserMessageInterface } from '../types/UserInterface';
 
 export default class Log {
     public static async ToDatabase(
         message: string,
-        sentBy: UserInterface,
+        sentBy: UserMessageInterface,
         sentOn: number,
         isPrivate: boolean,
         privateTo: number

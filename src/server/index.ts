@@ -43,7 +43,7 @@ if (fs.existsSync('/etc/letsencrypt/live/www.absoluterpg.com/fullchain.pem')) {
 const MYSQL_INSTANCE: DatabaseManager = DatabaseManager.instance;
 MYSQL_INSTANCE.connectDatabase().finally(() => {
     if (MYSQL_INSTANCE.isConnected()) {
-        AbsolServer = new Absol();
-        AbsolServer.start(SERVER_INSTANCE, initType);
+        AbsolServer = new Absol(SERVER_INSTANCE, initType);
+        AbsolServer.start();
     }
 });

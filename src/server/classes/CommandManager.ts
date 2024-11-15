@@ -93,22 +93,24 @@ export class CommandManager {
      * Executes a command.
      */
     public async ProcessCommand(messageData: InputMessageInterface): Promise<any> {
-        if (!messageData.text.startsWith(this.commandPrefix)) {
+        if (!messageData.Message.Text.startsWith(this.commandPrefix)) {
             return;
         }
 
-        const commandArguments = messageData.text.slice(this.commandPrefix.length).split(' ');
+        const commandArguments = messageData.Message.Text.slice(this.commandPrefix.length).split(
+            ' '
+        );
         const commandName = commandArguments.shift()?.toLowerCase();
         const commandData = this.commands.get(commandName);
 
         if (typeof commandData == 'undefined') {
             console.warn(
-                `[CommandManager | ProcessCommand] Command not found: ${commandName} (User ID: ${messageData.user.User_ID})`
+                `[CommandManager | ProcessCommand] Command not found: ${commandName} (User ID: ${messageData.User.User_ID})`
             );
             return;
         }
 
-        await this.HandleCooldown(commandData, messageData.user, 1);
+        await this.HandleCooldown(commandData, messageData.User, 1);
 
         const commandResponse = await commandData.execute(commandArguments);
 

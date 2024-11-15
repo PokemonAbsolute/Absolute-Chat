@@ -1,85 +1,100 @@
 import User from './UserManager';
-import Log from './LogManager';
+import { MessageHandler } from './MessageHandler';
 
-import MessageInterface from '../types/MessageInterface';
+import { MessageInterface } from '../types/MessageInterface';
 import { UserInterface } from '../types/UserInterface';
 
-class Message {
-    private message: string;
-    private sentOn: number;
-    private isPrivate: boolean = false;
-    private isPrivateTo: number;
+export class MessageManager {
+    private messageHandler: MessageHandler;
 
-    constructor(message: string, isPrivate?: boolean, isPrivateTo?: number) {
-        this.message = message;
-        this.sentOn = Date.now();
-        this.isPrivate = isPrivate ?? false;
-        this.isPrivateTo = isPrivateTo ?? -1;
+    //
+    public messages: Map<number, MessageInterface> = new Map();
+
+    //
+    private messagesToShow: number = 30;
+
+    /**
+     * Constructor
+     */
+    constructor() {
+        this.messageHandler = new MessageHandler();
     }
 
-    public fromUser(sentBy: User): MessageInterface {
-        if (typeof sentBy.userData !== 'undefined') {
-            Log.ToDatabase(
-                this.message,
-                sentBy.userData,
-                this.sentOn,
-                this.isPrivate,
-                this.isPrivateTo
+    /**
+     * Add a message to the message history.
+     */
+    public AddMessage(Message: MessageInterface): void {
+        this.messages.set(this.messages.size, Message);
+    }
+
+    /**
+     * Fetches all applicable messages in the message history to send to the client.
+     * Should include private messages only if they were designated for the connected client.
+     */
+    public FetchMessages(User: UserInterface): Map<number, MessageInterface> {
+        if (typeof User == 'undefined') {
+            console.log(
+                '[Chat | Server | MessageManager] Unabled to fetch messages for the user; User is undefined.'
             );
+            return new Map();
         }
 
-        return {
-            userID: sentBy.userData?.User_ID,
-            userName: sentBy.userData?.Username,
-            userRank: sentBy.userData?.Rank,
-            userAvatar: sentBy.userData?.Avatar,
-            messageText: this.message,
-            isPrivate: this.isPrivate,
-            isPrivateTo: this.isPrivateTo,
-            sentOn: this.sentOn,
-        };
+        const ApplicableMessages = new Map(
+            Array.from(this.messages.entries())
+                .filter(
+                    ([Message_ID, Message]) =>
+                        !Message.Message?.Private ||
+                        (Message.Message?.Private && Message.Message.Private_To === User.User_ID)
+                )
+                .slice(-this.messagesToShow)
+                .map(([Message_ID, Message]) => [Message_ID, Message])
+        );
+
+        console.log(
+            `[Chat | Server | MessageManager] Fetched messages for ${User.Username}:`,
+            ApplicableMessages
+        );
+
+        this.messages = ApplicableMessages;
+
+        return this.messages;
     }
 
-    public fromBot(): MessageInterface {
-        const sentBy: UserInterface = {
-            User_ID: -1,
-            Username: 'Absol',
-            Rank: 'Bot',
-            Auth_Code: 'AbsolBotAuthCode',
-            Avatar: '/Avatars/Custom/3.png',
-            Connected: true,
-        };
-
-        Log.ToDatabase(this.message, sentBy, this.sentOn, this.isPrivate, this.isPrivateTo);
-
-        return {
-            userID: sentBy.User_ID,
-            userName: sentBy.Username,
-            userRank: sentBy.Rank,
-            userAvatar: sentBy.Avatar,
-            messageText: this.message,
-            isPrivate: this.isPrivate,
-            isPrivateTo: this.isPrivateTo,
-            sentOn: this.sentOn,
-        };
-    }
-}
-
-export class MessageHandler {
+    /**
+     * Constructs a message from a user.
+     */
     public SendMessage(
-        message: string,
-        sentBy: User,
-        isPrivate?: boolean,
-        isPrivateTo?: number
+        Message: string,
+        Sent_By: User,
+        Is_Private?: boolean,
+        Private_To?: number
     ): MessageInterface {
-        return new Message(message, isPrivate, isPrivateTo).fromUser(sentBy);
+        const MessageContent = this.messageHandler.SendMessage(
+            Message,
+            Sent_By,
+            Is_Private,
+            Private_To
+        );
+        this.AddMessage(MessageContent);
+
+        console.log('[Chat | Server] Sending message:', MessageContent);
+
+        return MessageContent;
     }
 
+    /**
+     * Constructs a message from Absol bot.
+     */
     public SendBotMessage(
-        message: string,
-        isPrivate?: boolean,
-        isPrivateTo?: number
+        Message: string,
+        Is_Private?: boolean,
+        Private_To?: number
     ): MessageInterface {
-        return new Message(message, isPrivate, isPrivateTo).fromBot();
+        const MessageContent = this.messageHandler.SendBotMessage(Message, Is_Private, Private_To);
+        this.AddMessage(MessageContent);
+
+        console.log('[Chat | Server] Sending bot message:', MessageContent);
+
+        return MessageContent;
     }
 }

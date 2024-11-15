@@ -1,17 +1,19 @@
-import { UserInterface } from './UserInterface';
+import { UserInterface, UserMessageInterface } from './UserInterface';
 
-export default interface MessageInterface {
-    userID: number | undefined;
-    userName: string | undefined;
-    userRank: string | undefined;
-    userAvatar: string | undefined;
-    messageText: string;
-    isPrivate: boolean;
-    isPrivateTo: number;
-    sentOn: number;
+export interface Message {
+    ID?: number;
+    Text: string;
+    Private?: boolean;
+    Private_To?: number;
+    Timestamp?: number;
+}
+
+export interface MessageInterface {
+    User: UserMessageInterface;
+    Message: Message;
 }
 
 export interface InputMessageInterface {
-    user: UserInterface;
-    text: string;
+    User: UserInterface;
+    Message: Message;
 }

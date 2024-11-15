@@ -1,35 +1,28 @@
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 
-import User from './UserManager';
-import { MessageHandler } from './MessageManager';
 import { CommandManager } from './CommandManager';
+import { MessageManager } from './MessageManager';
+import { SocketEvents } from './SocketEvents';
 
-import MessageInterface, { InputMessageInterface } from '../types/MessageInterface';
+import { MessageInterface } from '../types/MessageInterface';
+import { UserInterface } from '../types/UserInterface';
 
 export default class Absol {
     private server: Server | undefined;
+    private socketEvents: SocketEvents | undefined;
 
-    private MessageHandler: MessageHandler;
-    private commandManager!: CommandManager;
+    //
+    public messageManager!: MessageManager;
+    public commandManager!: CommandManager;
 
-    private clientPool: User[] = [];
-    private messagePool: MessageInterface[] = [];
-
-    private messageCharLimit: number = 256;
-    private spamCheckMessageCount: number = 5;
-    private spamCheckIntervalSec: number = 5;
-
-    public messageBuffer: MessageInterface[] = [];
-
-    constructor() {
-        this.MessageHandler = new MessageHandler();
-    }
+    //
+    public connectedUsers: Map<string, UserInterface> = new Map();
 
     /**
-     * Starts the server and preps the socket and events.
+     * Constructor
      */
-    public start(server: http.Server, initType: string): void {
+    constructor(server: http.Server, initType: string) {
         /**
          * Create a new server instance.
          */
@@ -48,129 +41,12 @@ export default class Absol {
         });
 
         /**
-         * Initialize the CommandManager and pass the server instance to it.
+         * Initialize the CommandManager and load chat commands.
          */
         this.commandManager = new CommandManager();
+        this.commandManager.LoadCommands();
 
-        /**
-         * Handle connections to the server.
-         */
-        this.server.on('connection', (socket: Socket): void => {
-            let client: User;
-
-            /**
-             * Handle the initial authentication of the client.
-             */
-            socket.on('auth', async (authObject): Promise<void> => {
-                console.log('Attempting to authorize:', authObject);
-                client = new User(authObject.User_ID, authObject?.Auth_Code);
-                if (!(await client.init())) {
-                    return;
-                }
-                console.log('New client connected:', client);
-
-                this.clientPool.push(client);
-                this.getMessageHistory(client, 30);
-            });
-
-            /**
-             * Handle the disconnection of a client.
-             */
-            socket.on('disconnect', (): void => {
-                if (typeof client !== 'undefined') {
-                    this.clientPool = this.clientPool.filter(
-                        (tClient) => tClient.userData?.User_ID !== client.userData?.User_ID
-                    );
-                }
-            });
-
-            /**
-             * Handle the emitted chat-message.
-             */
-            socket.on('chat-message', async (chatData: InputMessageInterface): Promise<void> => {
-                console.log('Processing new chat message:', chatData);
-
-                /**
-                 * Client sent a mis-matched or invalid auth code.
-                 */
-                if (!(await client.auth(chatData?.user?.Auth_Code))) {
-                    return;
-                }
-
-                /**
-                 * Client is currently chat and/or RPG banned.
-                 */
-                if (await client.getBan()) {
-                    socket.emit(
-                        'chat-message',
-                        this.MessageHandler.SendBotMessage(
-                            `You are banned, ${client.userData?.Username}.`,
-                            true,
-                            client.userData?.User_ID
-                        )
-                    );
-
-                    socket.disconnect();
-                    return;
-                }
-
-                /**
-                 * Client has sent too many messages in a short period of time.
-                 */
-                if (this.isSpamming(client)) {
-                    socket.emit(
-                        'chat-message',
-                        this.MessageHandler.SendBotMessage(
-                            `Please send fewer messages, ${client.userData?.Username}.`,
-                            true,
-                            client.userData?.User_ID
-                        )
-                    );
-
-                    return;
-                }
-
-                /**
-                 * Client has sent a message over the character limit.
-                 */
-                if (chatData.text.length > this.messageCharLimit) {
-                    socket.emit(
-                        'chat-message',
-                        this.MessageHandler.SendBotMessage(
-                            `Messages must be ${this.messageCharLimit} characters or less, ${client.userData?.Username}.`,
-                            true,
-                            client.userData?.User_ID
-                        )
-                    );
-
-                    return;
-                }
-
-                this.messageBuffer.push(this.MessageHandler.SendMessage(chatData.text, client));
-
-                /**
-                 * Pass the message to the command handler in case it is a command.
-                 */
-                const commandResult = await this.commandManager.ProcessCommand(chatData);
-                if (typeof commandResult !== 'undefined') {
-                    this.messageBuffer.push(
-                        this.MessageHandler.SendBotMessage(
-                            commandResult,
-                            true,
-                            chatData.user.User_ID
-                        )
-                    );
-                }
-
-                /**
-                 * Emit all messages in the buffer to all clients.
-                 */
-                for (const Message of this.messageBuffer) {
-                    socket.emit('chat-message', Message);
-                    this.messagePool.push(Message);
-                }
-            });
-        });
+        this.messageManager = new MessageManager();
 
         /**
          * Emit a welcoming message when the server initially boots.
@@ -178,63 +54,52 @@ export default class Absol {
         let initMessage: MessageInterface;
         switch (initType) {
             case 'debug':
-                initMessage = this.MessageHandler.SendBotMessage(
+                initMessage = this.messageManager.SendBotMessage(
                     'Absolute Chat has started in debug mode.'
                 );
                 break;
 
             case 'update':
-                initMessage = this.MessageHandler.SendBotMessage('Absolute has been updated!');
+                initMessage = this.messageManager.SendBotMessage('Absolute has been updated!');
                 break;
 
             default:
-                initMessage = this.MessageHandler.SendBotMessage('Absolute Chat is online.');
+                initMessage = this.messageManager.SendBotMessage('Absolute Chat is online.');
                 break;
         }
 
         this.server.emit('chat-message', initMessage);
-        this.messagePool.push(initMessage);
-
-        /**
-         * Register our bot's commands.
-         */
-        this.commandManager.LoadCommands();
     }
 
     /**
-     * Get the message history.
+     * Starts the server and preps the socket and events.
      */
-    private getMessageHistory(client: User, messageCount: number): void {
+    public start(): void {
         if (typeof this.server === 'undefined') {
+            console.log('[Chat | Server] Failed to spin up new server.');
             return;
         }
 
-        messageCount = messageCount > 100 ? 100 : messageCount;
+        /**
+         * Handle connections to the server.
+         */
+        this.server.on('connection', (socket: Socket): void => {
+            this.socketEvents = new SocketEvents(this, socket, this.messageManager);
 
-        let messagesToUse: MessageInterface[] = [];
-        if (this.messagePool.length > messageCount) {
-            messagesToUse = this.messagePool.slice(-messageCount);
-        } else {
-            messagesToUse = this.messagePool;
-        }
+            /**
+             * Handle the initial authentication of the client.
+             */
+            this.socketEvents.auth.Initialize();
 
-        for (const message of messagesToUse) {
-            if (!message.isPrivate || message.isPrivateTo === client.userData?.User_ID) {
-                this.server.emit('chat-message', message);
-            }
-        }
-    }
+            /**
+             * Handle the disconnection of a client.
+             */
+            this.socketEvents.disconnect.Initialize();
 
-    /**
-     * Check if the client is spamming.
-     */
-    private isSpamming(client: User): boolean {
-        const TIME_LIMIT = Math.round(Date.now()) - this.spamCheckIntervalSec * 1_000;
-
-        const RECENT_MESSAGE_COUNT = this.messagePool.filter(
-            (message) => message.sentOn >= TIME_LIMIT && message.userID === client.userData?.User_ID
-        ).length;
-
-        return RECENT_MESSAGE_COUNT >= this.spamCheckMessageCount;
+            /**
+             * Handle the emitted chat-message.
+             */
+            this.socketEvents.chatMessage.Initialize();
+        });
     }
 }
