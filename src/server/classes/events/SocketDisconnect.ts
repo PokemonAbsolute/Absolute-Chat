@@ -16,7 +16,7 @@ export class SocketDisconnect {
 
         this.socket.on('disconnect', async (): Promise<void> => {
             const DisconnectedUser = this.absol.connectedUsers.get(this.socket.id);
-            if (typeof DisconnectedUser === 'undefined') {
+            if (typeof DisconnectedUser === 'undefined' || !DisconnectedUser) {
                 return;
             }
 
@@ -28,6 +28,9 @@ export class SocketDisconnect {
                 DisconnectedUser.Username,
                 `(${this.socket.id})`
             );
+
+            // Clean up socket
+            this.socket.removeAllListeners('disconnect');
         });
     }
 }

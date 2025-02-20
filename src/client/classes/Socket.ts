@@ -55,12 +55,16 @@ export class SocketEvents {
      */
     public HandleDisconnect(): void {
         this.socket.on('disconnect', () => {
+            if (!this.absolute.user) {
+                return;
+            }
+
             console.log('[Chat | Client] A user has disconnected from the socket.');
 
-            // Update chat input box
+            this.absolute.isActive = false;
+            this.absolute.user.Connected = false;
             this.absolute.HandleInputBox();
 
-            // Send message to chat - private to the disconnected user
             this.messageHandler.AddMessage({
                 User: {
                     User_ID: -1,
@@ -70,29 +74,12 @@ export class SocketEvents {
                 },
                 Message: {
                     ID: this.messageHandler.messages.size,
-                    Text: 'You have been disconnected from the chat.',
+                    Text: 'You have been disconnected from the chat. Please refresh the page.',
                     Private: true,
-                    Private_To: this.absolute.user!.User_ID,
+                    Private_To: this.absolute.user.User_ID,
                     Timestamp: new Date().getTime(),
                 },
             });
-
-            // Send disconnection to the server socket.
-            this.socket.emit('disconnect', {
-                User_ID: this.absolute.user!.User_ID,
-                Username: this.absolute.user!.Username,
-                Rank: this.absolute.user!.Rank,
-                Auth_Code: this.absolute.user!.Auth_Code,
-                Avatar: this.absolute.user!.Avatar,
-                Connected: this.absolute.user!.Connected,
-            });
-
-            // Set the client socket to inactive and remove the user.
-            this.absolute.isActive = false;
-            this.absolute.user = undefined;
-
-            // Render message history.
-            this.messageHandler.DisplayMessages();
         });
     }
 
