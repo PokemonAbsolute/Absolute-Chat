@@ -89,8 +89,6 @@ export class SocketEvents {
     public HandleMessage(): void {
         console.log("[Chat | Client] Watching for 'chat-message' events.");
         this.socket.on('chat-message', (data: MessageInterface) => {
-            console.log('[Chat | Client] Received a message from the server socket:', data);
-
             this.messageHandler.AddMessage(data);
         });
     }

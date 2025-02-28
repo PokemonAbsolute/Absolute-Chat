@@ -76,13 +76,8 @@ export class MessageHandler {
      */
     public AddMessage(messageData: MessageInterface): void {
         if (!this.absolute.isActive) {
-            console.log(
-                '[Chat | Client] Unable to send message due to the client socket not being active.'
-            );
             return;
         }
-
-        console.log(messageData);
 
         const message: MessageInterface = {
             User: {
@@ -103,10 +98,6 @@ export class MessageHandler {
 
         this.messages.set(this.messages.size, message);
         this.DisplayMessages();
-
-        console.log(
-            `[Chat | Client] Added new message to the message history. (#${message.Message.ID})`
-        );
     }
 
     /**
