@@ -96,6 +96,10 @@ export class MessageHandler {
             },
         };
 
+        if (messageData.Message.Text == 'Absolute Chat is online.') {
+            this.ClearMessages();
+        }
+
         this.messages.set(this.messages.size, message);
         this.DisplayMessages();
     }
