@@ -40,9 +40,7 @@ export class MessageHandler {
 
         this.messages.forEach((Message, Message_ID) => {
             MessageHtml += `
-                <div class='message${
-                    Message.Message.Private ? ' private' : ''
-                }' data-msg-id='${Message_ID}'>
+                <div class='message${Message.Message.Private ? ' private' : ''}' data-msg-id='${Message_ID}'>
                   <div class="avatar">
                     <a href='/profile.php?id=${Message.User.User_ID}'>
                       <img src="/images/${Message.User.Avatar}" />
@@ -107,7 +105,7 @@ export class MessageHandler {
     /**
      * Empty message history.
      */
-    private ClearMessages(): void {
+    public ClearMessages(): void {
         this.messages.clear();
     }
 }

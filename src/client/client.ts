@@ -61,5 +61,6 @@ export class Absolute {
         this.socketEvents.HandleConnect();
         this.socketEvents.HandleDisconnect();
         this.socketEvents.HandleMessage();
+        this.socketEvents.HandleChatCleared();
     }
 }

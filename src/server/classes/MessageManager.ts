@@ -28,14 +28,20 @@ export class MessageManager {
     }
 
     /**
+     * Clear the message history.
+     */
+    public ClearMessages(): void {
+        console.log('[Chat | Server | MessageManager] Clearing message history.');
+        this.messages.clear();
+    }
+
+    /**
      * Fetches all applicable messages in the message history to send to the client.
      * Should include private messages only if they were designated for the connected client.
      */
     public FetchMessages(User: UserInterface): Map<number, MessageInterface> {
         if (typeof User == 'undefined') {
-            console.log(
-                '[Chat | Server | MessageManager] Unabled to fetch messages for the user; User is undefined.'
-            );
+            console.log('[Chat | Server | MessageManager] Unabled to fetch messages for the user; User is undefined.');
             return new Map();
         }
 
@@ -50,10 +56,7 @@ export class MessageManager {
                 .map(([Message_ID, Message]) => [Message_ID, Message])
         );
 
-        console.log(
-            `[Chat | Server | MessageManager] Fetched messages for ${User.Username}:`,
-            ApplicableMessages
-        );
+        console.log(`[Chat | Server | MessageManager] Fetched messages for ${User.Username}:`, ApplicableMessages);
 
         this.messages = ApplicableMessages;
 
@@ -63,18 +66,8 @@ export class MessageManager {
     /**
      * Constructs a message from a user.
      */
-    public SendMessage(
-        Message: string,
-        Sent_By: User,
-        Is_Private?: boolean,
-        Private_To?: number
-    ): MessageInterface {
-        const MessageContent = this.messageHandler.SendMessage(
-            Message,
-            Sent_By,
-            Is_Private,
-            Private_To
-        );
+    public SendMessage(Message: string, Sent_By: User, Is_Private?: boolean, Private_To?: number): MessageInterface {
+        const MessageContent = this.messageHandler.SendMessage(Message, Sent_By, Is_Private, Private_To);
         this.AddMessage(MessageContent);
 
         console.log('[Chat | Server] Sending message:', MessageContent);
@@ -85,16 +78,24 @@ export class MessageManager {
     /**
      * Constructs a message from Absol bot.
      */
-    public SendBotMessage(
-        Message: string,
-        Is_Private?: boolean,
-        Private_To?: number
-    ): MessageInterface {
+    public SendBotMessage(Message: string, Is_Private?: boolean, Private_To?: number): MessageInterface {
         const MessageContent = this.messageHandler.SendBotMessage(Message, Is_Private, Private_To);
         this.AddMessage(MessageContent);
 
         console.log('[Chat | Server] Sending bot message:', MessageContent);
 
         return MessageContent;
+    }
+
+    /**
+     * Sends a notification to all users that chat has been cleared.
+     */
+    public NotifyChatCleared(clearedBy: UserInterface): MessageInterface {
+        const notificationMessage = `Chat has been cleared by ${clearedBy.Username}.`;
+        const botMessage = this.SendBotMessage(notificationMessage);
+
+        console.log(`[Chat | Server | MessageManager] Chat has been cleared by ${clearedBy.Username}.`);
+
+        return botMessage;
     }
 }

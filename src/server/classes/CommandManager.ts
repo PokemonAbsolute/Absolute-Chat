@@ -13,7 +13,7 @@ export class CommandManager {
     private categories: Map<string, any> = new Map();
     private cooldowns: Map<string, any> = new Map();
 
-    private commandPrefix: string = '!';
+    public commandPrefix: string = '!';
 
     constructor() {}
 
@@ -66,8 +66,7 @@ export class CommandManager {
 
         const now = Date.now();
         const timestamps = this.cooldowns.get(command.name);
-        const cooldownAmount =
-            (command?.cooldown ?? 3) * (user.Rank != 'Member' ? 0 : cooldownModifier * 1_000);
+        const cooldownAmount = (command?.cooldown ?? 3) * (user.Rank != 'Member' ? 0 : cooldownModifier * 1_000);
 
         if (timestamps.has(user.User_ID)) {
             const expirationTime = timestamps.get(user.User_ID) + cooldownAmount;
@@ -76,9 +75,9 @@ export class CommandManager {
                 const timeLeft = (expirationTime - now) / 1000;
 
                 console.warn(
-                    `User ${user.User_ID} is on cooldown for command ${
-                        command.name
-                    }. Time left: ${timeLeft.toFixed(1)}s`
+                    `User ${user.User_ID} is on cooldown for command ${command.name}. Time left: ${timeLeft.toFixed(
+                        1
+                    )}s`
                 );
 
                 return;
@@ -97,9 +96,7 @@ export class CommandManager {
             return;
         }
 
-        const commandArguments = messageData.Message.Text.slice(this.commandPrefix.length).split(
-            ' '
-        );
+        const commandArguments = messageData.Message.Text.slice(this.commandPrefix.length).split(' ');
         const commandName = commandArguments.shift()?.toLowerCase();
         const commandData = this.commands.get(commandName);
 
@@ -114,6 +111,6 @@ export class CommandManager {
 
         const commandResponse = await commandData.execute(commandArguments);
 
-        return commandResponse.message;
+        return commandResponse;
     }
 }

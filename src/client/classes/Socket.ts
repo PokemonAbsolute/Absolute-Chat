@@ -92,4 +92,16 @@ export class SocketEvents {
             this.messageHandler.AddMessage(data);
         });
     }
+
+    /**
+     * Handle chat clearing events from the server.
+     */
+    public HandleChatCleared(): void {
+        console.log("[Chat | Client] Watching for 'chat-cleared' events.");
+        this.socket.on('chat-cleared', () => {
+            // Clear client-side messages
+            this.messageHandler.ClearMessages();
+            this.messageHandler.DisplayMessages();
+        });
+    }
 }
