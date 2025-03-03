@@ -88,9 +88,9 @@ export class MessageHandler {
             Message: {
                 ID: this.messages.size,
                 Text: messageData.Message.Text,
-                Private: messageData.Message?.Private,
-                Private_To: messageData.Message?.Private_To,
-                Timestamp: messageData.Message?.Timestamp,
+                Private: messageData.Message.Private,
+                Private_To: messageData.Message.Private_To,
+                Timestamp: messageData.Message.Timestamp,
             },
         };
 

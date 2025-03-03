@@ -43,8 +43,6 @@ export class SocketEvents {
                 Connected: this.absolute.user.Connected,
             });
 
-            console.log('[Chat | Client] A user has connected to the socket.');
-
             // Render message history.
             this.messageHandler.DisplayMessages();
         });
@@ -58,8 +56,6 @@ export class SocketEvents {
             if (!this.absolute.user) {
                 return;
             }
-
-            console.log('[Chat | Client] A user has disconnected from the socket.');
 
             this.absolute.isActive = false;
             this.absolute.user.Connected = false;
@@ -87,7 +83,6 @@ export class SocketEvents {
      * Handle messages received from the server socket.
      */
     public HandleMessage(): void {
-        console.log("[Chat | Client] Watching for 'chat-message' events.");
         this.socket.on('chat-message', (data: MessageInterface) => {
             this.messageHandler.AddMessage(data);
         });
@@ -97,7 +92,6 @@ export class SocketEvents {
      * Handle chat clearing events from the server.
      */
     public HandleChatCleared(): void {
-        console.log("[Chat | Client] Watching for 'chat-cleared' events.");
         this.socket.on('chat-cleared', () => {
             // Clear client-side messages
             this.messageHandler.ClearMessages();

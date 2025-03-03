@@ -66,7 +66,12 @@ export class MessageManager {
     /**
      * Constructs a message from a user.
      */
-    public SendMessage(Message: string, Sent_By: User, Is_Private?: boolean, Private_To?: number): MessageInterface {
+    public SendMessage(
+        Message: string,
+        Sent_By: UserInterface,
+        Is_Private?: boolean,
+        Private_To?: number
+    ): MessageInterface {
         const MessageContent = this.messageHandler.SendMessage(Message, Sent_By, Is_Private, Private_To);
         this.AddMessage(MessageContent);
 
