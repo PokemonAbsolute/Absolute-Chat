@@ -96,7 +96,7 @@ export class MessageHandler {
             },
         };
 
-        if (messageData.Message.Text == 'Absolute Chat is online.') {
+        if (messageData.User.User_ID == -1 && messageData.Message.Text == 'Absolute Chat is online.') {
             this.ClearMessages();
         }
 

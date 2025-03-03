@@ -43,7 +43,9 @@ export class SocketChatMessage {
                     return;
                 }
 
-                // Client is Chat or RPG banned.
+                /**
+                 * Client is Chat or RPG banned.
+                 */
                 if (await IsUserBanned(User.User_ID)) {
                     console.log('[Chat | Server] User is banned.');
 
@@ -61,7 +63,9 @@ export class SocketChatMessage {
                     return;
                 }
 
-                // Client has sent too many messages in a short period of time.
+                /**
+                 * Client has sent too many messages in a short period of time.
+                 */
                 if (this.isSpamming(User)) {
                     console.log('[Chat | Server] User is spamming.');
 
@@ -77,7 +81,9 @@ export class SocketChatMessage {
                     return;
                 }
 
-                // Client has sent a message over the character limit.
+                /**
+                 * Client has sent a message over the character limit.
+                 */
                 if (ChatMessage.Message.Text.length > this.messageCharLimit) {
                     console.log('[Chat | Server] User sent a message over the character limit.');
 
@@ -93,13 +99,42 @@ export class SocketChatMessage {
                     return;
                 }
 
-                console.log(
-                    '[Chat | Server | SocketChatMessage] Sending message to the client socket:',
-                    ChatMessage
-                );
+                /**
+                 * Handle command messages.
+                 */
+                if (ChatMessage.Message.Text.startsWith(this.absol.commandManager.commandPrefix)) {
+                    const commandResponse = await this.absol.commandManager.ProcessCommand(
+                        ChatMessage
+                    );
 
+                    // Handle regular command responses
+                    if (commandResponse) {
+                        const message =
+                            typeof commandResponse === 'string'
+                                ? commandResponse
+                                : commandResponse.message;
+
+                        const BotMessage = this.absol.messageManager.SendBotMessage(
+                            message,
+                            true,
+                            User.User_ID
+                        );
+
+                        this.socket.emit('chat-message', BotMessage);
+                        return;
+                    }
+                }
+
+                /**
+                 * Validation checks have passed; sending message to the socket.
+                 */
                 this.absol.server?.emit('chat-message', ChatMessage);
                 this.messageManager.AddMessage(ChatMessage);
+
+                console.log(
+                    '[Chat | Server | SocketChatMessage] Sent message to the client socket:',
+                    ChatMessage
+                );
             }
         );
     }
