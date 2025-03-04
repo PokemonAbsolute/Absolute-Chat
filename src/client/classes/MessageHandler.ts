@@ -13,34 +13,17 @@ export class MessageHandler {
     constructor(absolute: Absolute) {
         this.absolute = absolute;
     }
-
     /**
      * Display the message history to the user.
      */
     public DisplayMessages(): void {
-        if (typeof this.absolute.user === 'undefined' || !this.absolute.user.Connected) {
-            document.getElementById('chatContent')!.innerHTML = `
-                <table style="width: 100%; height: 100%;">
-                  <tr>
-                    <td style="width: 100%; height: 100%;" valign="middle">
-                      <img src='https://${location.hostname}/images/Pokemon/Sprites/Normal/359.png' />
-                      <br />
-                      <b style="color: #ff0000; font-size: 14px;">Absolute Chat is offline.</b>
-                      <br /><br />
-                      Absol is currently offline for one reason or another.
-                    </td>
-                  </tr>
-                </table>
-            `;
-
-            return;
-        }
-
         let MessageHtml = '';
 
         this.messages.forEach((Message, Message_ID) => {
             MessageHtml += `
-                <div class='message${Message.Message.Private ? ' private' : ''}' data-msg-id='${Message_ID}'>
+                <div class='message${
+                    Message.Message.Private ? ' private' : ''
+                }' data-msg-id='${Message_ID}'>
                   <div class="avatar">
                     <a href='/profile.php?id=${Message.User.User_ID}'>
                       <img src="/images/${Message.User.Avatar}" />
@@ -94,7 +77,10 @@ export class MessageHandler {
             },
         };
 
-        if (messageData.User.User_ID == -1 && messageData.Message.Text == 'Absolute Chat is online.') {
+        if (
+            messageData.User.User_ID == -1 &&
+            messageData.Message.Text == 'Absolute Chat is online.'
+        ) {
             this.ClearMessages();
         }
 

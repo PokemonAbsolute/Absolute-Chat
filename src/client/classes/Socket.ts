@@ -30,7 +30,11 @@ export class SocketEvents {
     public HandleConnect(): void {
         this.socket.on('connect', () => {
             if (typeof this.absolute.user === 'undefined') {
+                this.absolute.isActive = false;
+                this.absolute.user!.Connected = false;
+
                 console.log('[Chat | Client] User failed to connect.');
+
                 return;
             }
 
@@ -61,21 +65,19 @@ export class SocketEvents {
             this.absolute.user.Connected = false;
             this.absolute.HandleInputBox();
 
-            this.messageHandler.AddMessage({
-                User: {
-                    User_ID: -1,
-                    Username: 'Absol',
-                    Rank: 'Bot',
-                    Avatar: '../images/Avatars/Custom/3.png',
-                },
-                Message: {
-                    ID: this.messageHandler.messages.size,
-                    Text: 'You have been disconnected from the chat. Please refresh the page.',
-                    Private: true,
-                    Private_To: this.absolute.user.User_ID,
-                    Timestamp: new Date().getTime(),
-                },
-            });
+            document.getElementById('chatContent')!.innerHTML = `
+                <table style="width: 100%; height: 100%;">
+                  <tr>
+                    <td style="width: 100%; height: 100%;" valign="middle">
+                      <img src='https://${location.hostname}/images/Pokemon/Sprites/Normal/359.png' />
+                      <br />
+                      <b style="color: #ff0000; font-size: 14px;">Absolute Chat is offline.</b>
+                      <br /><br />
+                      Absol is currently offline for one reason or another.
+                    </td>
+                  </tr>
+                </table>
+            `;
         });
     }
 
@@ -93,7 +95,6 @@ export class SocketEvents {
      */
     public HandleChatCleared(): void {
         this.socket.on('chat-cleared', () => {
-            // Clear client-side messages
             this.messageHandler.ClearMessages();
             this.messageHandler.DisplayMessages();
         });
