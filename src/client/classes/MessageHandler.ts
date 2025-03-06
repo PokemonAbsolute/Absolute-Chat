@@ -1,5 +1,7 @@
 import { Absolute } from '../client';
 
+import { GetRankClass } from '../util/GetRankClass';
+
 import { MessageInterface } from '../types/Message';
 
 export class MessageHandler {
@@ -20,6 +22,8 @@ export class MessageHandler {
         let MessageHtml = '';
 
         this.messages.forEach((Message, Message_ID) => {
+            const UserRankClass = GetRankClass(Message.User.Rank);
+
             MessageHtml += `
                 <div class='message${
                     Message.Message.Private ? ' private' : ''
@@ -31,7 +35,7 @@ export class MessageHandler {
                   </div>
                   <div class="username">
                     <a href='/profile.php?id=${Message.User.User_ID}'>
-                      <b class='${Message.User.Rank}'>${Message.User.Username}</b>
+                      <b class='${UserRankClass}'>${Message.User.Username}</b>
                     </a>
                     <br />
                     ${

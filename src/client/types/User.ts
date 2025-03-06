@@ -1,14 +1,16 @@
+export type UserRanks =
+    | 'Member'
+    | 'Chat Moderator'
+    | 'Moderator'
+    | 'Super Moderator'
+    | 'Bot'
+    | 'Developer'
+    | 'Administrator';
+
 export interface UserInterface {
     User_ID: number;
     Username: string;
-    Rank:
-        | 'Member'
-        | 'Chat Moderator'
-        | 'Moderator'
-        | 'Super Moderator'
-        | 'Bot'
-        | 'Developer'
-        | 'Administrator';
+    Rank: UserRanks;
     Auth_Code: string;
     Avatar: string;
     Connected: boolean;
