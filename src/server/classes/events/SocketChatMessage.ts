@@ -122,7 +122,7 @@ export class SocketChatMessage {
             const ConstructedMessage = this.absol.messageManager.SendMessage(ChatMessage.Message.Text, User, false, -1);
 
             this.absol.server?.emit('chat-message', ConstructedMessage);
-            this.messageManager.AddMessage(ConstructedMessage);
+            // this.messageManager.AddMessage(ConstructedMessage);
 
             console.log('[Chat | Server | SocketChatMessage] Sent message to the client socket:', ChatMessage);
         });
