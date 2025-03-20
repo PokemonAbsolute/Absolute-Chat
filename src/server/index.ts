@@ -42,7 +42,7 @@ const MYSQL_INSTANCE: DatabaseManager = DatabaseManager.instance;
 MYSQL_INSTANCE.connectDatabase().finally(() => {
     if (MYSQL_INSTANCE.isConnected()) {
         console.log(' ~ [Chat | Index] MySQL connection established; starting new Absol() server.');
-        let AbsolServer: Absol = new Absol(SERVER_INSTANCE, '');
+        let AbsolServer: Absol = new Absol(SERVER_INSTANCE);
         AbsolServer.start();
     }
 });

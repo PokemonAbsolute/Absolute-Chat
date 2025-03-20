@@ -3,6 +3,8 @@ import { Server, Socket } from 'socket.io';
 
 import { CommandManager } from './CommandManager';
 import { MessageManager } from './MessageManager';
+import { NotificationManager } from './NotificationManager';
+
 import { SocketEvents } from './SocketEvents';
 
 import { MessageInterface } from '../types/MessageInterface';
@@ -15,6 +17,7 @@ export default class Absol {
     //
     public messageManager!: MessageManager;
     public commandManager!: CommandManager;
+    public notificationManager!: NotificationManager;
 
     //
     public connectedUsers: Map<string, UserInterface> = new Map();
@@ -25,7 +28,7 @@ export default class Absol {
     /**
      * Constructor
      */
-    constructor(server: http.Server, initType: string) {
+    constructor(server: http.Server, initType: string = '') {
         if (!this.initialized) {
             console.log('[Chat | Server] Initializing new server instance.');
             this.initialized = true;
@@ -54,6 +57,11 @@ export default class Absol {
             this.commandManager.LoadCommands();
 
             this.messageManager = new MessageManager();
+
+            /**
+             * Initialize our notification poll manager.
+             */
+            this.notificationManager = new NotificationManager(this);
 
             /**
              * Emit a welcoming message when the server initially boots.
@@ -108,6 +116,11 @@ export default class Absol {
              * Handle the emitted chat-message.
              */
             this.socketEvents.chatMessage.Initialize();
+
+            /**
+             * Poll notifications.
+             */
+            this.notificationManager.PollNotifications();
         });
     }
 }
