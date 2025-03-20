@@ -31,7 +31,6 @@ export class MessageManager {
      * Clear the message history.
      */
     public ClearMessages(): void {
-        console.log('[Chat | Server | MessageManager] Clearing message history.');
         this.messages.clear();
     }
 
@@ -41,7 +40,6 @@ export class MessageManager {
      */
     public FetchMessages(User: UserInterface): Map<number, MessageInterface> {
         if (typeof User == 'undefined') {
-            console.log('[Chat | Server | MessageManager] Unabled to fetch messages for the user; User is undefined.');
             return new Map();
         }
 
@@ -55,8 +53,6 @@ export class MessageManager {
                 .slice(-this.messagesToShow)
                 .map(([Message_ID, Message]) => [Message_ID, Message])
         );
-
-        console.log(`[Chat | Server | MessageManager] Fetched messages for ${User.Username}:`, ApplicableMessages);
 
         this.messages = ApplicableMessages;
 
@@ -72,10 +68,13 @@ export class MessageManager {
         Is_Private?: boolean,
         Private_To?: number
     ): MessageInterface {
-        const MessageContent = this.messageHandler.SendMessage(Message, Sent_By, Is_Private, Private_To);
+        const MessageContent = this.messageHandler.SendMessage(
+            Message,
+            Sent_By,
+            Is_Private,
+            Private_To
+        );
         this.AddMessage(MessageContent);
-
-        console.log('[Chat | Server] Sending message:', MessageContent);
 
         return MessageContent;
     }
@@ -83,11 +82,13 @@ export class MessageManager {
     /**
      * Constructs a message from Absol bot.
      */
-    public SendBotMessage(Message: string, Is_Private?: boolean, Private_To?: number): MessageInterface {
+    public SendBotMessage(
+        Message: string,
+        Is_Private?: boolean,
+        Private_To?: number
+    ): MessageInterface {
         const MessageContent = this.messageHandler.SendBotMessage(Message, Is_Private, Private_To);
         this.AddMessage(MessageContent);
-
-        console.log('[Chat | Server] Sending bot message:', MessageContent);
 
         return MessageContent;
     }
@@ -99,7 +100,9 @@ export class MessageManager {
         const notificationMessage = `Chat has been cleared by ${clearedBy.Username}.`;
         const botMessage = this.SendBotMessage(notificationMessage);
 
-        console.log(`[Chat | Server | MessageManager] Chat has been cleared by ${clearedBy.Username}.`);
+        console.log(
+            `[Chat | Server | MessageManager] Chat has been cleared by ${clearedBy.Username}.`
+        );
 
         return botMessage;
     }

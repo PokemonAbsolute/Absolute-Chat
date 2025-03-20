@@ -27,7 +27,7 @@ export default class DatabaseManager {
             return rows as any[];
         } catch (error) {
             console.log(
-                '[MySQL Query] An error occurred while performing a SQL quer. [Query]:',
+                '[MySQL Query] An error occurred while performing a SQL query. [Query]:',
                 queryString,
                 '[Params]:',
                 queryParams,
