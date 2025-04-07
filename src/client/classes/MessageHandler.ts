@@ -53,7 +53,9 @@ export class MessageHandler {
             `;
         });
 
-        document.getElementById('chatContent')!.innerHTML = MessageHtml;
+        const Chat_Element = document.querySelector('#chatContent');
+        Chat_Element!.innerHTML = MessageHtml;
+        Chat_Element!.scrollTop = Chat_Element!.scrollHeight + 72;
     }
 
     /**
