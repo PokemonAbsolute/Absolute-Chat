@@ -74,7 +74,7 @@ If you do choose to add a feature or fix a bug, do note that your pull request w
 
 
 ## Contributing
-If you're interested in contributing to Absolute, please check out the main repository's [CONTRIBUTING.md]([docs/CONTRIBUTING.md](https://github.com/Toxocious/Absolute/blob/master/docs/CONTRIBUTING.md)) for more information.
+If you're interested in contributing to Absolute, please check out the main repository's [CONTRIBUTING.md]([.github/CONTRIBUTING.md](https://github.com/Toxocious/Absolute/blob/master/.github/CONTRIBUTING.md)) for more information.
 
 
 
